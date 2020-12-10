@@ -1,10 +1,14 @@
 from flask import Flask
 from app.models import db
+from app.commands import register_app_command
+from config import Config
 
-def create_app(config_obj=None):
+def create_app(config_name=None):
     app = Flask(__name__)
-    if config_obj:
-        app.config.from_object(config_obj)
+    if config_name:
+        config = Config.get(config_name)
+        if config:
+            app.config.from_object(config)
     else:
         app.config["SECRET_KEY"] = "test"
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
@@ -12,6 +16,7 @@ def create_app(config_obj=None):
 
     db.init_app(app)
     register_blueprint(app)
+    register_app_command(app)
     return app
 
 
