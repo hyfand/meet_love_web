@@ -1,5 +1,5 @@
 import click
-from app.models import db
+from app.extensions import db
 
 def register_app_command(app):
     @app.cli.command()

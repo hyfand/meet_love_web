@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "macro.html" import form_field %}
+{% block body %}
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        {{ form_field(form.user_name) }}
+        {{ form_field(form.password) }}
+        {{ form_field(form.password_repeat) }}
+        {{ form_field(form.email) }}
+        {{ form.submit() }}
+    </form>
+{% endblock body %}

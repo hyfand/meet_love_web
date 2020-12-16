@@ -1,7 +1,9 @@
 from flask import Flask
-from app.models import db
 from app.commands import register_app_command
 from config import Config
+from app.extensions import login_manager
+
+from app.extensions import db
 
 def create_app(config_name=None):
     app = Flask(__name__)
@@ -17,6 +19,10 @@ def create_app(config_name=None):
     db.init_app(app)
     register_blueprint(app)
     register_app_command(app)
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+    login_manager.login_message_category = 'info'
+    login_manager.login_message = 'Access denied.'
     return app
 
 
