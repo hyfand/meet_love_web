@@ -28,4 +28,6 @@ def create_app(config_name=None):
 
 def register_blueprint(app):
     from app.blueprint.user import user_bp
+    from app.blueprint.main import main_bp
     app.register_blueprint(user_bp)
+    app.register_blueprint(main_bp)

@@ -9,3 +9,9 @@ class UserRegisterForm(FlaskForm):
     password_repeat = PasswordField("确认密码", validators=[DataRequired()])
     email = StringField("邮箱", validators=[Email()])
     submit = SubmitField("注册")
+
+
+class UserLoginForm(FlaskForm):
+    user_name = StringField("用户名", validators=[DataRequired()])
+    password = PasswordField("密码", validators=[DataRequired(), Length(min=8, max=16)])
+    submit = SubmitField("登录")
