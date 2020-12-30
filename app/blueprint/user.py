@@ -12,7 +12,12 @@ user_bp = Blueprint("user", __name__, url_prefix="/user")
 def register():
     form = UserRegisterForm()
     if form.validate_on_submit():
-        user = User(user_name=form.user_name.data, password=form.password.data, email=form.email.data)
+        user = User(
+            user_name=form.user_name.data,
+            nick_name=form.nick_name.data,
+            password=form.password.data,
+            email=form.email.data
+        )
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('.login'))
@@ -28,10 +33,11 @@ def login():
     if form.validate_on_submit():
         user_name = form.user_name.data
         password = form.password.data
+        remember = form.remember.data
         user = User.query.filter_by(user_name=user_name).first()
         if user:
             if user.check_password(password):
-                login_user(user)
+                login_user(user, remember)
                 flash("欢迎登录!", "info")
                 return redirect_back()
             flash("密码错误!", "warning")

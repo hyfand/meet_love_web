@@ -1,10 +1,22 @@
 {% macro form_field(field) %}
-    <label for="{{ field.id }}">{{ field.label }}</label>
-    <div class="input-group input-group-sm mb-3">
-      {{ field(class="form-control", **kwargs) }}
+    <div class="form-group">
+        {{ field.label(class="control-label") }}
+        <div class="">
+            {{ field(class="form-control", **kwargs) }}
+        </div>
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <small class="error">{{ error }}</small><br>
+            {% endfor %}
+        {% endif %}
     </div>
-    {% if field.errors %}
-    {% for error in field.errors %}
-        <small class="error">{{ error }}</small><br>
-    {% endfor %} {% endif %}
+{% endmacro %}
+
+{% macro check_field(field) %}
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+          {{ field(class="form-check-input") }}
+          {{ field.label(class="form-check-label") }}
+        </div>
+    </div>
 {% endmacro %}

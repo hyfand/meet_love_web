@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     user_name = Column(String(32), index=True, nullable=False)
     password_hash = Column(String(128))
     real_name = Column(String(32))
+    nick_name = Column(String(32))
     id_number = Column(String(32))  # 身份证号码
     sex = Column(SmallInteger)  # 0 女 1 男 2 保密
     email = Column(String(254))
