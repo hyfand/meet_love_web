@@ -9,7 +9,7 @@
 <body>
 <div>
     {% block head %}
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light mb-4">
             <a class="navbar-brand" href="#">
                 <img src="{{ url_for('static', filename='web_img/web_icon.svg') }}" width="30" height="30"
                      class="d-inline-block align-top" alt="" loading="lazy"> 秘密
@@ -48,7 +48,7 @@
                             {{ current_user.nick_name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">个人主页</a>
+                            <a class="dropdown-item" href="{{ url_for('user.user_info') }}">个人主页</a>
                             <a class="dropdown-item" href="#">信息</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url_for('user.logout') }}">退出登录</a>

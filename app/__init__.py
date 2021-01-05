@@ -1,5 +1,6 @@
 from flask import Flask
 from app.commands import register_app_command
+from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
 
@@ -19,10 +20,11 @@ def create_app(config_name=None):
     db.init_app(app)
     register_blueprint(app)
     register_app_command(app)
+    register_template_filter(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'user.login'
     login_manager.login_message_category = 'info'
-    login_manager.login_message = 'Access denied.'
+    login_manager.login_message = '无权访问, 请登录。'
     return app
 
 

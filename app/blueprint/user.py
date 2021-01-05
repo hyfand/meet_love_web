@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 from app.form.user import UserRegisterForm, UserLoginForm
 from app.models.user import User
 from app.extensions import db
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from app.utils import redirect_back
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
@@ -15,6 +15,7 @@ def register():
         user = User(
             user_name=form.user_name.data,
             nick_name=form.nick_name.data,
+            sex=form.sex.data,
             password=form.password.data,
             email=form.email.data
         )
@@ -51,3 +52,9 @@ def logout():
     logout_user()
     flash("退出成功", "info")
     return redirect_back()
+
+
+@user_bp.route("/user_info")
+@login_required
+def user_info():
+    return render_template("user/user_info.html")

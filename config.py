@@ -12,5 +12,5 @@ class ProductConfig(BaseConfig):
 
 Config = {
     "product": ProductConfig,
-    "devolopment": DevelopConfig
+    "development": DevelopConfig
 }
