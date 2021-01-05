@@ -13,6 +13,8 @@
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">账户名</span></p> {{ current_user.user_name }}</div>
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">性别</span></p> {{ current_user.sex | sex_replace}}</div>
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">昵称</span></p> {{ current_user.nick_name }}</div>
+                    <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">真实姓名</span></p> {{ current_user.real_name | default("未填写", boolean=True) }}</div>
+                    <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">身份证</span></p> {{ current_user.id_number | default("未填写", boolean=True) }}</div>
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">邮箱</span></p> {{ current_user.email }}</div>
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">电话</span></p> {{ current_user.phone | default("未填写", boolean=True)}}</div>
                     <div class="row"><p class="col-md-2"><span class="badge badge-pill badge-primary w-100">个性签名</span></p> {{ current_user.manifesto | default("未填写", boolean=True)}}</div>

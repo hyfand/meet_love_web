@@ -6,10 +6,13 @@
         {{ form.csrf_token }}
         {{ form_field(form.user_name) }}
         {{ form_field(form.nick_name) }}
+        {{ form_field(form.real_name) }}
+        {{ form_field(form.id_number) }}
         {{ form_field(form.sex) }}
         {{ form_field(form.password) }}
         {{ form_field(form.password_repeat) }}
         {{ form_field(form.email) }}
+        {{ form_field(form.phone) }}
         {{ form.submit(class="btn btn-primary") }}
 
     </form>

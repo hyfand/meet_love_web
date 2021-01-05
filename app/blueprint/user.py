@@ -12,16 +12,26 @@ user_bp = Blueprint("user", __name__, url_prefix="/user")
 def register():
     form = UserRegisterForm()
     if form.validate_on_submit():
-        user = User(
-            user_name=form.user_name.data,
-            nick_name=form.nick_name.data,
-            sex=form.sex.data,
-            password=form.password.data,
-            email=form.email.data
-        )
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('.login'))
+        if User.query.filter_by(user_name=form.user_name.data).first():
+            flash("账号名已存在!")
+        elif User.query.filter_by(email=form.email.data).first():
+            flash("邮箱已存在!")
+        elif User.query.filter_by(phone=form.phone.data).first():
+            flash("手机号已经存在!")
+        else:
+            user = User(
+                user_name=form.user_name.data,
+                nick_name=form.nick_name.data,
+                real_name=form.real_name.data,
+                id_number=form.id_number.data,
+                sex=form.sex.data,
+                password=form.password.data,
+                email=form.email.data,
+                phone=form.phone.data
+            )
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('.login'))
     return render_template("user/user_register.html", form=form)
 
 
@@ -57,4 +67,11 @@ def logout():
 @user_bp.route("/user_info")
 @login_required
 def user_info():
+    return render_template("user/user_info.html")
+
+
+@user_bp.route("/user_info_modify")
+@login_required
+def user_info_modify():
+
     return render_template("user/user_info.html")
