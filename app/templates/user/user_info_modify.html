@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field %}
+{% block body %}
+    <div class="row">
+        {% include "user/_user_menu.html" %}
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    修改信息
+                </div>
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='web_img/default_avater/default01.jpg') }}" class="img-thumbnail w-50 mb-2" alt="">
+                    <form action="" method="post" role="form">
+                    {{ form.csrf_token }}
+                    {{ form_field(form.nick_name) }}
+                    {{ form_field(form.email) }}
+                    {{ form_field(form.phone) }}
+                    {{ form_field(form.manifesto, rows=5) }}
+                    {{ form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

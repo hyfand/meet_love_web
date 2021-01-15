@@ -1,14 +1,17 @@
-{% macro form_field(field) %}
+{% macro form_field(field, annotation=None) %}
     <div class="form-group">
         {{ field.label(class="control-label") }}
+        {% if annotation %}
+            {{ annotation | safe }}
+        {% endif %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <span class='badge badge-danger'>{{ error }}</span>
+            {% endfor %}
+        {% endif %}
         <div class="">
             {{ field(class="form-control", **kwargs) }}
         </div>
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <small class="error">{{ error }}</small><br>
-            {% endfor %}
-        {% endif %}
     </div>
 {% endmacro %}
 

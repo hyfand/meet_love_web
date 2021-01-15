@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    新分享
+                </div>
+                <div class="card-body">
+                    <form action="" method="post" role="form">
+                        {{ form.csrf_token }}
+                        {{ form_field(form.title) }}
+                        {{ form_field(form.content, class="form-control") }}
+                        {{ form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block script %}
+    {{ super() }}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name="content", height="600") }}
+{% endblock script %}

@@ -3,8 +3,10 @@ from app.commands import register_app_command
 from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
+from app.extensions import db, ckeditor, moment
+import os
 
-from app.extensions import db
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 def create_app(config_name=None):
     app = Flask(__name__)
@@ -18,6 +20,9 @@ def create_app(config_name=None):
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
+    moment.init_app(app)
+    app.config["UPLOADED_PATH"] = os.path.join(basedir, "uploads")
+    ckeditor.init_app(app)
     register_blueprint(app)
     register_app_command(app)
     register_template_filter(app)
@@ -25,11 +30,14 @@ def create_app(config_name=None):
     login_manager.login_view = 'user.login'
     login_manager.login_message_category = 'info'
     login_manager.login_message = '无权访问, 请登录。'
+
     return app
 
 
 def register_blueprint(app):
     from app.blueprint.user import user_bp
     from app.blueprint.main import main_bp
+    from app.blueprint.share import share_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(share_bp)

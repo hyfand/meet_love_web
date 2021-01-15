@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
-from app.form.user import UserRegisterForm, UserLoginForm
-from app.models.user import User
+from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm
+from app.models.user import *
 from app.extensions import db
 from flask_login import login_user, logout_user, current_user, login_required
 from app.utils import redirect_back
@@ -27,10 +27,12 @@ def register():
                 sex=form.sex.data,
                 password=form.password.data,
                 email=form.email.data,
-                phone=form.phone.data
+                phone=form.phone.data,
+                manifesto=form.manifesto.data
             )
             db.session.add(user)
             db.session.commit()
+            flash("注册成功, 请登录!")
             return redirect(url_for('.login'))
     return render_template("user/user_register.html", form=form)
 
@@ -70,8 +72,52 @@ def user_info():
     return render_template("user/user_info.html")
 
 
-@user_bp.route("/user_info_modify")
+@user_bp.route("/user_info_modify", methods=["GET", "POST"])
 @login_required
 def user_info_modify():
+    form = UserChangeInfoForm()
+    if form.is_submitted():
+        if form.validate():
+            current_user.nick_name = form.nick_name.data
+            current_user.email = form.email.data
+            current_user.phone = form.phone.data
+            current_user.manifesto = form.manifesto.data
+            try:
+                db.session.commit()
+                flash("嘿嘿 ❤ 信息修改成功！")
+            except Exception:
+                flash("保存失败 😱 请联系管理员！")
+                db.session.rollback()
+            return redirect(url_for("user.user_info"))
+        else:
+            flash("哎呀 😱 请检查输入是否正确！")
+            return render_template("user/user_info_modify.html", form=form)
+    form.nick_name.data = current_user.nick_name
+    form.email.data = current_user.email
+    form.phone.data = current_user.phone
+    form.manifesto.data = current_user.manifesto
+    return render_template("user/user_info_modify.html", form=form)
 
-    return render_template("user/user_info.html")
+
+@user_bp.route("/user_password_modify", methods=["GET", "POST"])
+@login_required
+def user_password_modify():
+    form = UserChangePasswordForm()
+    if form.is_submitted():
+        if form.validate():
+            if current_user.check_password(form.old.data):
+                current_user.password = form.new.data
+                try:
+                    db.session.commit()
+                    flash("太棒了 ❤ 密码修改成功！请重新登陆！")
+                    logout_user()
+                    return redirect(url_for("user.login"))
+                except Exception:
+                    flash("密码修改失败 😱 请联系管理员！")
+                    db.session.rollback()
+            else:
+                flash("旧密码不正确 😱 再想想！")
+            return redirect(url_for("user.user_password_modify"))
+        else:
+            flash("哎呀 😱 请检查输入是否正确！")
+    return render_template("user/user_password_modify.html", form=form)

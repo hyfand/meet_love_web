@@ -48,8 +48,9 @@
                             {{ current_user.nick_name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ url_for('user.user_info') }}">个人主页</a>
-                            <a class="dropdown-item" href="#">信息</a>
+                            <a class="dropdown-item" href="{{ url_for('share.shares', user_id=current_user.id) }}">我的分享</a>
+                            <a class="dropdown-item" href="{{ url_for('share.new_share') }}">新分享</a>
+                            <a class="dropdown-item" href="{{ url_for('user.user_info') }}">个人资料</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url_for('user.logout') }}">退出登录</a>
                         </div>
@@ -61,7 +62,7 @@
                 </ul>
 
                 <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" plac      r="Search" aria-label="Search">
+                    <input class="form-control mr-sm-2" type="search" placeholder="搜索" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
@@ -77,14 +78,18 @@
             </div>
         {% endfor %}
         {% block body %}{% endblock body %}
+        {% block script %}
+            <script src="{{ url_for('static', filename='js/jquery.3.3.1.min.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+        {% endblock script %}
     </div>
-    <hr>
-    <div class="container">
-        {% block foot %}<p>电话: 18001202682</p>{% endblock foot %}
-    </div>
-</div>
+    <footer>
 
-<script src="{{ url_for('static', filename='js/jquery.3.3.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+        <hr>
+        <div class="container">
+            {% block foot %}<p>电话: 18001202682</p>{% endblock foot %}
+        </div>
+    </footer>
+</div>
 </body>
 </html>

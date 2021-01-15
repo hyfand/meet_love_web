@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="font-weight-normal">{{ share.title }}</h4>
+                    <span>{{ moment(share.publish_time).format("LLL") }}</span>
+                </div>
+                <div class="card-body">
+                    {{ share.content | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block script %}
+    {{ super() }}
+    {{ moment.include_moment(local_js=url_for("static", filename="js/moment-with-locales.js")) }}
+    {{ moment.locale(auto_detect=True) }}
+{% endblock script %}

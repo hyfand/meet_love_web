@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     real_name = Column(String(32))
     nick_name = Column(String(32))
     id_number = Column(String(32))  # 身份证号码
-    sex = Column(SmallInteger)  # 0 女 1 男 2 保密
+    sex = Column(SmallInteger)  # 0 女 1 男
     email = Column(String(254))
     phone = Column(String(30))
     manifesto = Column(Text)  # 个人宣言
@@ -35,6 +35,3 @@ class User(db.Model, UserMixin):
     #
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-
-
