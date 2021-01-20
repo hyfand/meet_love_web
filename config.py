@@ -9,7 +9,7 @@ class BaseConfig:
 
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test"
-    # SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = True
 
 
 class ProductConfig(BaseConfig):
