@@ -3,7 +3,7 @@ from app.commands import register_app_command
 from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
-from app.extensions import db, ckeditor, moment
+from app.extensions import db, ckeditor, moment, csrf
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -23,6 +23,7 @@ def create_app(config_name=None):
     moment.init_app(app)
     app.config["UPLOADED_PATH"] = os.path.join(basedir, "uploads")
     ckeditor.init_app(app)
+    csrf.init_app(app)
     register_blueprint(app)
     register_app_command(app)
     register_template_filter(app)

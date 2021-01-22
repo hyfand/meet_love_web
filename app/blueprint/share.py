@@ -14,9 +14,8 @@ def new_share():
     form = ShareForm()
     if form.validate_on_submit():
         new_share = Share(
-            title=form.title.data,
             content=form.content.data,
-            author_id=current_user.id,
+            author_id=current_user.id
         )
         print(form.content.data)
         try:

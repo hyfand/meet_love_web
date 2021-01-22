@@ -10,7 +10,6 @@ from app.extensions import login_manager
 class Share(db.Model):
     __tablename__ = "tbl_share"
     id = Column(Integer, primary_key=True)
-    title = Column(String(100), index=True, nullable=False)
     content = Column(String(5000))
     author_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"))
     author = db.relationship("User", backref=db.backref("share"))
