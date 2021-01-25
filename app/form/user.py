@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField
 from wtforms.validators import DataRequired, EqualTo, Length, Email, Regexp
+from flask_wtf.file import FileRequired
 
 
 class UserRegisterForm(FlaskForm):
@@ -40,4 +41,9 @@ class UserChangePasswordForm(FlaskForm):
     old = PasswordField("密码", validators=[DataRequired(), Length(min=8, max=16)])
     new = PasswordField("新密码", validators=[DataRequired(), Length(min=8, max=16), Regexp("^.*(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?\(\)]*).*$", message="密码太简单"), EqualTo("new_repeat", message="密码不一致")])
     new_repeat = PasswordField("再次输入新密码", validators=[DataRequired(), Length(min=8, max=16)])
+    submit = SubmitField("确定")
+
+
+class UserPortraitForm(FlaskForm):
+    potrait = FileField("头像", validators=[FileRequired()])
     submit = SubmitField("确定")

@@ -1,5 +1,7 @@
 from urllib.parse import urlparse, urljoin
 from flask import request, redirect, url_for
+import os
+import uuid
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -14,3 +16,9 @@ def redirect_back(default='index', **kwargs):
         if is_safe_url(target):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
+
+
+def random_filename(old_filename):
+    ext = os.path.splitext(old_filename)[1]
+    new_filename = uuid.uuid4().hex + ext
+    return new_filename

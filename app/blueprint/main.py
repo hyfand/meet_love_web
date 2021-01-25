@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, flash, current_app, send_from_directory, request, url_for
-from app.extensions import ckeditor
-from app.utils import redirect_back
+from flask import Blueprint, render_template, current_app, send_from_directory, request, url_for
 from flask_ckeditor import upload_success, upload_fail
 from flask_ckeditor.utils import random_filename
 import os
+from app.uploads_set import potrait
 
 main_bp = Blueprint("main", __name__)
 

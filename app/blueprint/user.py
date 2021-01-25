@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
-from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm
+from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm, UserPortraitForm
 from app.models.user import *
 from app.extensions import db
 from flask_login import login_user, logout_user, current_user, login_required
-from app.utils import redirect_back
+from app.utils import redirect_back, random_filename
+from app.uploads_set import potrait
+
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
@@ -70,6 +72,19 @@ def logout():
 @login_required
 def user_info():
     return render_template("user/user_info.html")
+
+
+@user_bp.route("/user_protrait_modify", methods=["GET", "POST"])
+@login_required
+def user_protrait_modify():
+    form = UserPortraitForm()
+    if form.validate_on_submit():
+        name = random_filename(form.potrait.data.filename)
+        potrait_name = potrait.save(form.potrait.data, name=name)
+        current_user.potrait = potrait_name
+        db.session.commit()
+        return redirect_back()
+    return render_template("user/user_potrait_modify.html", form=form)
 
 
 @user_bp.route("/user_info_modify", methods=["GET", "POST"])

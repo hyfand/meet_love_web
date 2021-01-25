@@ -4,9 +4,8 @@ from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
 from app.extensions import db, ckeditor, moment, csrf
-import os
-
-basedir = os.path.abspath(os.path.dirname(__file__))
+from flask_uploads import configure_uploads, patch_request_class
+from app.uploads_set import potrait, photos
 
 def create_app(config_name=None):
     app = Flask(__name__)
@@ -21,7 +20,6 @@ def create_app(config_name=None):
 
     db.init_app(app)
     moment.init_app(app)
-    app.config["UPLOADED_PATH"] = os.path.join(basedir, "uploads")
     ckeditor.init_app(app)
     csrf.init_app(app)
     register_blueprint(app)
@@ -31,6 +29,9 @@ def create_app(config_name=None):
     login_manager.login_view = 'user.login'
     login_manager.login_message_category = 'info'
     login_manager.login_message = '无权访问, 请登录。'
+
+    configure_uploads(app, (photos, potrait))
+    patch_request_class(app, 8 * 1024 * 1204)
 
     return app
 
