@@ -9,7 +9,7 @@
                     基本信息
                 </div>
                 <div class="card-body">
-                    <img src="{{ current_user.potrait_url }}" class="img-thumbnail w-50 mb-2" alt="">
+                    <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_l) }}" class="img-thumbnail mb-2" alt="">
                     <div class="row">
                         <p class="col-md-6"><span class="mr-2 badge badge-pill badge-primary">账户名</span>{{ current_user.user_name }}</p>
                         <p class="col-md-6"><span class="mr-2 badge badge-pill badge-primary">性别</span>{{ current_user.sex | sex_replace}}</p>

@@ -1,18 +1,14 @@
-from flask import url_for
-
 from app.extensions import db
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime, Boolean, SmallInteger, Text
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app.extensions import login_manager
-from app.uploads_set import potrait
+from flask_avatars import Identicon
 
 class User(db.Model, UserMixin):
     __tablename__ = "tbl_user"
     id = Column(Integer, primary_key=True)
-    potrait = Column(String(128), nullable=True)
     user_name = Column(String(32), index=True)
     password_hash = Column(String(128))
     real_name = Column(String(32))
@@ -24,6 +20,14 @@ class User(db.Model, UserMixin):
     manifesto = Column(Text)  # 个人宣言
     register_time = Column(DateTime, default=datetime.utcnow)
     confirm = Column(Boolean)
+
+    avatar_s = db.Column(db.String(64))
+    avatar_m = db.Column(db.String(64))
+    avatar_l = db.Column(db.String(64))
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.generate_avatar()
 
     @property
     def password(self):
@@ -39,8 +43,10 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @property
-    def potrait_url(self):
-        if self.potrait:
-            return potrait.url(self.potrait)
-        return url_for("static", file_name="/web_img/default_avater/default01.jpg")
+    def generate_avatar(self):
+        avatar = Identicon()
+        filenames = avatar.generate(text=self.user_name)
+        self.avatar_s = filenames[0]
+        self.avatar_m = filenames[1]
+        self.avatar_l = filenames[2]
+        db.session.commit()

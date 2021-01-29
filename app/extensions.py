@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor
 from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
+from flask_avatars import Avatars
 
 login_manager = LoginManager()
 @login_manager.user_loader
@@ -15,3 +16,4 @@ db = SQLAlchemy()
 ckeditor = CKEditor()
 moment = Moment()
 csrf = CSRFProtect()
+avatars = Avatars()

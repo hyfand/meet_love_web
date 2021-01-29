@@ -4,7 +4,7 @@ from app.models.user import *
 from app.extensions import db
 from flask_login import login_user, logout_user, current_user, login_required
 from app.utils import redirect_back, random_filename
-from app.uploads_set import potrait
+from app.uploads_set import photos
 
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
@@ -84,7 +84,7 @@ def user_protrait_modify():
         current_user.potrait = potrait_name
         db.session.commit()
         return redirect_back()
-    return render_template("user/user_potrait_modify.html", form=form)
+    return render_template("user/user_avatar_modify.html", form=form)
 
 
 @user_bp.route("/user_info_modify", methods=["GET", "POST"])

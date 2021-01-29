@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field %}
+{% block body %}
+    <div class="row">
+        {% include "user/_user_menu.html" %}
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    修改头像
+                </div>
+                <div class="card-body">
+                    <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_l) }}" class="img-thumbnail mb-2" alt="" width="">
+                    <form action="" method="post" role="form" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    {{ form_field(form.potrait) }}
+                    {{ form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

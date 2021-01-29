@@ -5,8 +5,12 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="font-weight-normal">{{ share.title }}</h4>
-                    <span>{{ moment(share.publish_time).format("LLL") }}</span>
+                    <div class="row">
+                        <a class="col-md-4">
+                            <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_s) }}" class="img-thumbnail" alt="" width="">
+                        </a>
+                        <span class="text-right text-secondary  mt-2 col-md-8">{{ moment(share.publish_time).format("LLL") }}</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     {{ share.content | safe }}

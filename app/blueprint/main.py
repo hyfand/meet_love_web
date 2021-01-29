@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, current_app, send_from_directory, 
 from flask_ckeditor import upload_success, upload_fail
 from flask_ckeditor.utils import random_filename
 import os
-from app.uploads_set import potrait
 
 main_bp = Blueprint("main", __name__)
 
@@ -10,6 +9,11 @@ main_bp = Blueprint("main", __name__)
 @main_bp.route("/")
 def index():
     return render_template("index.html")
+
+
+@main_bp.route("/avatars/<path:filename>")
+def get_avatar(filename):
+    return send_from_directory(current_app.config['AVATARS_SAVE_PATH'], filename)
 
 
 @main_bp.route("/files/<filename>")
@@ -27,4 +31,3 @@ def upload():
     f.save(os.path.join(current_app.config['UPLOADED_PATH'], new_filename))
     url = url_for('main.uploaded_files', filename=new_filename)
     return upload_success(url=url)
-

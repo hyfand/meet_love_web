@@ -42,7 +42,7 @@
                     </li>
                 </ul>
 
-                    <img src="{{ current_user.potrait_url }}" width="30" height="30"
+                    <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_s) }}" width="30" height="30"
                          class="d-inline-block align-top" alt="" loading="lazy">
 
                 <ul class="navbar-nav mr-left">
