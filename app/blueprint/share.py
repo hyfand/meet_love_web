@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 from app.models.share import Share
 from app.extensions import db
 from flask_login import current_user, login_required
-from app.utils import redirect_back
 from app.form.share import ShareForm
 
 share_bp = Blueprint("share", __name__, url_prefix="/share")

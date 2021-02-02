@@ -25,6 +25,8 @@ class User(db.Model, UserMixin):
     avatar_m = db.Column(db.String(64))
     avatar_l = db.Column(db.String(64))
 
+    avatar_raw = db.Column(db.String(64))
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.generate_avatar()

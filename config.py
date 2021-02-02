@@ -16,6 +16,8 @@ class BaseConfig:
 
     AVATARS_SAVE_PATH = os.path.join(base_dir, "avatars")  # 头像
     AVATARS_SIZE_TUPLE = (30, 100, 300)
+    AVATARS_CROP_PREVIEW_SIZE = 100
+    MAX_CONTENT_LENGTH = 3 * 1024 * 1024
 
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test"

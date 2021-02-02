@@ -1,5 +1,21 @@
 {% extends "_base.html" %}
 {% from "_macro.html" import form_field, check_field %}
+{% block css %}
+{{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.Jcrop.css') }}">
+    <style>
+        #preview-box {
+            display: block;
+            position: absolute;
+            top: -2px;
+            right: -129px;
+            padding: 5px;
+            border: 1px rgba(0,0,0,.4) solid;
+            background: white;
+            border-radius: 4px;
+        }
+    </style>
+{% endblock css %}
 {% block body %}
     <div class="row">
         {% include "user/_user_menu.html" %}
@@ -9,14 +25,37 @@
                     修改头像
                 </div>
                 <div class="card-body">
-                    <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_l) }}" class="img-thumbnail mb-2" alt="" width="">
-                    <form action="" method="post" role="form" enctype="multipart/form-data">
-                    {{ form.csrf_token }}
-                    {{ form_field(form.potrait) }}
-                    {{ form.submit(class="btn btn-primary") }}
+                    <form action="{{ url_for(".user_avatar_upload") }}" method="post" role="form" enctype="multipart/form-data">
+                        {{ avatar_form.csrf_token }}
+
+                      <div class="form-group">
+                          <h6 class="text-info">第 1 步: 图片上传</h6><br>
+                          {{ avatar_form.image(class="form-control-file", id="img") }}
+                      </div>
+
+
+                        {{ avatar_form.submit(class="btn btn-outline-success") }}
+                    </form>
+                    <hr>
+                    <h6 class="text-info">第 2 步: 头像裁剪</h6><br>
+                    {{ avatars.crop_box("main.get_avatar", current_user.avatar_raw) }}
+                    {{ avatars.preview_box("main.get_avatar", current_user.avatar_raw) }}
+                    <br>
+                    <form action="{{ url_for(".user_avatar_crop") }}" method="post" role="form" enctype="multipart/form-data">
+                        {{ crop_form.csrf_token }}
+                        {{ crop_form.x }}
+                        {{ crop_form.y }}
+                        {{ crop_form.w }}
+                        {{ crop_form.h }}
+                        {{ crop_form.submit(class="btn btn-success") }}
                     </form>
                 </div>
             </div>
         </div>
     </div>
 {% endblock body %}
+{% block script %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/jquery.Jcrop.js') }}"></script>
+    {{ avatars.init_jcrop() }}
+{% endblock script %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
-from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm, UserPortraitForm
+from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm, UserAvatarForm, CropAvatarForm
 from app.models.user import *
-from app.extensions import db
+from app.extensions import db, avatars
 from flask_login import login_user, logout_user, current_user, login_required
 from app.utils import redirect_back, random_filename
 from app.uploads_set import photos
@@ -74,18 +74,44 @@ def user_info():
     return render_template("user/user_info.html")
 
 
-@user_bp.route("/user_protrait_modify", methods=["GET", "POST"])
+@user_bp.route("/user_avatar_modify", methods=["GET", "POST"])
 @login_required
-def user_protrait_modify():
-    form = UserPortraitForm()
-    if form.validate_on_submit():
-        name = random_filename(form.potrait.data.filename)
-        potrait_name = potrait.save(form.potrait.data, name=name)
-        current_user.potrait = potrait_name
-        db.session.commit()
-        return redirect_back()
-    return render_template("user/user_avatar_modify.html", form=form)
+def user_avatar_modify():
+    avatar_form = UserAvatarForm()
+    crop_form = CropAvatarForm()
+    return render_template("user/user_avatar_modify.html", avatar_form=avatar_form, crop_form=crop_form)
 
+
+@user_bp.route("/user_avatar_upload", methods=["POST"])
+@login_required
+def user_avatar_upload():
+    form = UserAvatarForm()
+    if form.validate_on_submit():
+        image = form.image.data
+        filename = avatars.save_avatar(image)
+        current_user.avatar_raw = filename
+        db.session.commit()
+        flash("头像上传成功, 请剪切哟")
+    flash("头像上传失败~")
+    return redirect(url_for(".user_avatar_modify"))
+
+
+@user_bp.route("/user_avatar_crop", methods=["POST"])
+@login_required
+def user_avatar_crop():
+    form = CropAvatarForm()
+    if form.validate_on_submit():
+        x = form.x.data
+        y = form.y.data
+        w = form.w.data
+        h = form.h.data
+        filenames = avatars.crop_avatar(current_user.avatar_raw, x, y, w, h)
+        current_user.avatar_s = filenames[0]
+        current_user.avatar_m = filenames[1]
+        current_user.avatar_l = filenames[2]
+        db.session.commit()
+        flash("头像上传成功！")
+    return redirect(url_for(".user_avatar_modify"))
 
 @user_bp.route("/user_info_modify", methods=["GET", "POST"])
 @login_required

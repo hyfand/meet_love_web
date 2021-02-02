@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, HiddenField
 from wtforms.validators import DataRequired, EqualTo, Length, Email, Regexp
-from flask_wtf.file import FileRequired
+from flask_wtf.file import FileRequired, FileAllowed
 
 
 class UserRegisterForm(FlaskForm):
@@ -44,6 +44,14 @@ class UserChangePasswordForm(FlaskForm):
     submit = SubmitField("确定")
 
 
-class UserPortraitForm(FlaskForm):
-    potrait = FileField("头像", validators=[FileRequired()])
-    submit = SubmitField("确定")
+class UserAvatarForm(FlaskForm):
+    image = FileField("头像要小于3M", validators=[FileRequired(), FileAllowed(["jpg", "png"], message="头像格式要求 jpg 或者 png")])
+    submit = SubmitField("上传头像")
+
+
+class CropAvatarForm(FlaskForm):
+    x = HiddenField()
+    y = HiddenField()
+    w = HiddenField()
+    h = HiddenField()
+    submit = SubmitField("裁剪上传头像")

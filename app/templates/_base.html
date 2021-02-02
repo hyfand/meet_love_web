@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock title %}</title>
+    {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    {% endblock css %}
 </head>
 <body>
 <div>
