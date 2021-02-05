@@ -1,1 +1,23 @@
 {% extends "_base.html" %}
+{% block body %}
+<div class="row">
+        {% for share in shares %}
+            <div class="col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <img src="{{ url_for("main.get_avatar", filename=share.author.avatar_s) }}" alt="">
+                        </div>
+                        <div>
+                            <span>{{ share.author.nick_name }}</span>
+                        </div>
+                        <span>{{ moment(share.publish_time).format("LLL") }}</span>
+                    </div>
+                    <div class="card-body">
+                        {{ share.content | safe }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}

@@ -88,6 +88,8 @@
         {% block script %}
             <script src="{{ url_for('static', filename='js/jquery.3.3.1.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+            {{ moment.include_moment(local_js=url_for("static", filename="js/moment-with-locales.js")) }}
+            {{ moment.locale(auto_detect=True) }}
         {% endblock script %}
     </div>
     <footer>

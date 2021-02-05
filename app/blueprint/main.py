@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, current_app, send_from_directory, request, url_for
 from flask_ckeditor import upload_success, upload_fail
 from flask_ckeditor.utils import random_filename
+from app.models.user import User
+from app.models.share import Share
 import os
 
 main_bp = Blueprint("main", __name__)
@@ -8,7 +10,8 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
 def index():
-    return render_template("index.html")
+    shares = Share.query.order_by(Share.publish_time.desc()).all()
+    return render_template("index.html", shares=shares)
 
 
 @main_bp.route("/avatars/<path:filename>")
