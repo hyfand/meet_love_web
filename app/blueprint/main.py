@@ -9,9 +9,12 @@ main_bp = Blueprint("main", __name__)
 
 
 @main_bp.route("/")
-def index():
-    shares = Share.query.order_by(Share.publish_time.desc()).all()
-    return render_template("index.html", shares=shares)
+@main_bp.route("/<int:page>")
+def index(page=1):
+    # shares = Share.query.order_by(Share.publish_time.desc()).all()
+    pagination = Share.query.order_by(Share.publish_time.desc()).paginate(page, 10)
+    shares = pagination.items
+    return render_template("index.html", shares=shares, pagination=pagination)
 
 
 @main_bp.route("/avatars/<path:filename>")
