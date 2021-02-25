@@ -92,7 +92,8 @@ def user_avatar_upload():
         current_user.avatar_raw = filename
         db.session.commit()
         flash("头像上传成功, 请剪切哟")
-    flash("头像上传失败~")
+    else:
+        flash("头像上传失败~" + form.errors["image"][0])
     return redirect(url_for(".user_avatar_modify"))
 
 

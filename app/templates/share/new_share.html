@@ -8,8 +8,9 @@
                     新分享
                 </div>
                 <div class="card-body">
-                    <form action="" method="post" role="form">
+                    <form action="" method="post" role="form" enctype="multipart/form-data">
                         {{ form.csrf_token }}
+                        {{ form_field(form.img, class="form-control-file") }}
                         {{ form_field(form.content, class="form-control", rows=15) }}
                         {{ form.submit(class="btn btn-primary") }}
                     </form>
@@ -18,8 +19,3 @@
         </div>
     </div>
 {% endblock body %}
-{% block script %}
-    {{ super() }}
-{#    {{ ckeditor.load() }}#}
-{#    {{ ckeditor.config(name="content", height="600") }}#}
-{% endblock script %}

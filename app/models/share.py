@@ -11,6 +11,7 @@ class Share(db.Model):
     __tablename__ = "tbl_share"
     id = Column(Integer, primary_key=True)
     content = Column(String(5000))
+    img = Column(String(1000))
     author_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"))
     author = db.relationship("User", backref=db.backref("share"))
     publish_time = Column(DateTime, default=datetime.utcnow)

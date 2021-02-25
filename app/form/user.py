@@ -45,7 +45,7 @@ class UserChangePasswordForm(FlaskForm):
 
 
 class UserAvatarForm(FlaskForm):
-    image = FileField("头像要小于3M", validators=[FileRequired(), FileAllowed(["jpg", "png"], message="头像格式要求 jpg 或者 png")])
+    image = FileField("图片上传(小于3M)", validators=[FileRequired(), FileAllowed(["jpg", "png", "jpeg", "gif", "bmp"], message="头像格式要求 jpg png jpeg gif bmp")])
     submit = SubmitField("上传头像")
 
 

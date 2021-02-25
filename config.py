@@ -17,12 +17,23 @@ class BaseConfig:
     AVATARS_SAVE_PATH = os.path.join(base_dir, "avatars")  # 头像
     AVATARS_SIZE_TUPLE = (30, 100, 300)
     AVATARS_CROP_PREVIEW_SIZE = 100
-    # AVATARS_CROP_BASE_WIDTH = 300
+    AVATARS_CROP_INIT_SIZE = 100
+    # AVATARS_CROP_BASE_WIDTH = 350
     MAX_CONTENT_LENGTH = 3 * 1024 * 1024
+
+    DROPZONE_MAX_FILE_SIZE = 3
+    DROPZONE_MAX_FILES = 3
+    DROPZONE_ALLOWED_FILE_TYPE = "image"
+    DROPZONE_DEFAULT_MESSAGE = "这里上传照片"
+    DROPZONE_INVALID_FILE_TYPE = "只能传图片哦~"
+    DROPZONE_MAX_FILE_EXCEED = "超过上传图片数量"
+    DROPZONE_ENABLE_CSRF = True
+    DROPZONE_SERVE_LOCAL = True
+
 
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test"
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_ECHO = True
 
 
 class ProductConfig(BaseConfig):

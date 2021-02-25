@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% from "_macro.html" import form_field, check_field %}
+{% from "_macro.html" import pager %}
 {% block body %}
     <div class="row">
         {% for share in shares %}
@@ -8,12 +9,48 @@
                     <div class="card-header">
                         <h4 class="font-weight-normal">{{ share.title }}</h4>
                         <span>{{ moment(share.publish_time).format("LLL") }}</span>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#deleteModal{{ share.id }}" style="font-size: 14px">
+                            删除
+                        </button>
                     </div>
                     <div class="card-body">
-                        {{ share.content | safe }}
+                        {% if share.img %}
+                            <div class="text-left">
+                                <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="img-fluid">
+                            </div>
+                            <br>
+                        {% endif %}
+                        <div class="text-left">
+                            <p>{{ share.content | safe }}</p>
+                        </div>
                     </div>
                 </div>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ share.id }}" tabindex="-1" aria-labelledby="deleteModal"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                确定删除吗？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">取消</button>
+                                <form method="post" action="{{ url_for("share.delete_share", sid=share.id) }}">
+                                    {{ form.csrf_token }}
+                                    {{ form.submit(class="btn btn-danger btn-sm") }}
+                                </form>
+{#                                <button type="button" class="btn btn-primary">Save changes</button>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         {% endfor %}
     </div>
+    {{ pager(pagination, user_id=current_user.id) }}
 {% endblock body %}
