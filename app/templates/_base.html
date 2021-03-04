@@ -6,6 +6,7 @@
     <title>{% block title %}{% endblock title %}</title>
     {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     {% endblock css %}
 </head>
 <body>
@@ -90,6 +91,7 @@
             <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
             {{ moment.include_moment(local_js=url_for("static", filename="js/moment-with-locales.js")) }}
             {{ moment.locale(auto_detect=True) }}
+            <script src="{{ url_for('static', filename='js/init.js') }}"></script>
         {% endblock script %}
     </div>
     <footer>

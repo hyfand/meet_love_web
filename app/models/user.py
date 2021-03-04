@@ -5,6 +5,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask_avatars import Identicon
+from app.models.share import share_like_table
 
 class User(db.Model, UserMixin):
     __tablename__ = "tbl_user"
@@ -26,6 +27,8 @@ class User(db.Model, UserMixin):
     avatar_l = db.Column(db.String(64))
 
     avatar_raw = db.Column(db.String(64))
+
+    like_shares = db.relationship("Share", secondary=share_like_table, back_populates="like_users")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

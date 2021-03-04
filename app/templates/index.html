@@ -17,7 +17,16 @@
                             </div>
                             <br>
                         {% endif %}
-                        <p>{{ share.content | safe }}</p>
+                        <p class="share">{{ share.content | safe }}</p>
+                        <p class="text-right">
+                                    <span style="cursor: pointer;">
+                                    {% if current_user in share.like_users %}
+                                        <i class="bi bi-suit-heart" style="color:red"></i>
+                                    {% else %}
+                                        <i class="bi bi-suit-heart"></i>
+                                    {% endif %}
+                                    {{ share.like_users_count() }}</span>
+                            </p>
                         <p class="text-secondary text-right" style="font-size:16px; margin-bottom:0">{{ moment(share.publish_time).format("LLL") }}</p>
                     </div>
                 </div>
