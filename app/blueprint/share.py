@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, abort
+from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, abort, jsonify
 from app.models.share import Share
 from app.extensions import db
 from flask_login import current_user, login_required
@@ -70,3 +70,18 @@ def delete_share(sid):
     else:
         abort(400)
     return redirect_back()
+
+
+@share_bp.route("/praise_share", methods=["post"])
+@login_required
+def praise_share():
+    json = request.get_json()
+    share_id = int(json.get("share_id"))
+    op = json.get("op")
+    share = Share.query.filter_by(id=share_id).first()
+    if op == -1:
+        share.like_users.remove(current_user)
+    elif op == 1:
+        share.like_users.append(current_user)
+    db.session.commit()
+    return jsonify({"status": "ok"}), 200

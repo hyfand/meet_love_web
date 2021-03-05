@@ -4,7 +4,7 @@
 {% block body %}
     <div class="row">
         {% for share in shares %}
-            <div class="col-md-12 mb-3">
+            <div class="col-md-12 mb-3 share-data" data-id={{ share.id }}>
                 <div class="card">
                     <div class="card-header">
                         <h4 class="font-weight-normal">{{ share.title }}</h4>
@@ -27,11 +27,11 @@
                             <p class="text-right">
                                     <span style="cursor: pointer;">
                                     {% if current_user in share.like_users %}
-                                        <i class="bi bi-suit-heart" style="color:red"></i>
+                                        <i class="bi bi-suit-heart praise-del" style="color:red"></i>
                                     {% else %}
-                                        <i class="bi bi-suit-heart"></i>
+                                        <i class="bi bi-suit-heart praise-add"></i>
                                     {% endif %}
-                                    {{ share.like_users_count() }}</span>
+                                        <span class="praise-num">{{ share.like_users_count() }}</span></span>
                             </p>
 
 
@@ -54,7 +54,6 @@
                                     {{ form.csrf_token }}
                                     {{ form.submit(class="btn btn-danger btn-sm") }}
                                 </form>
-                                {#                                <button type="button" class="btn btn-primary">Save changes</button>#}
                             </div>
                         </div>
                     </div>
