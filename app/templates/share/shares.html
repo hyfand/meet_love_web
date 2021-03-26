@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 {% from "_macro.html" import form_field, check_field %}
-{% from "_macro.html" import pager %}
+{% from "_macro.html" import pager_full %}
 {% block body %}
     <div class="row">
         {% for share in shares %}
@@ -18,7 +18,7 @@
                     <div class="card-body">
                         {% if share.img %}
                             <div class="text-left">
-                                <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="img-fluid">
+                                <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="share_img">
                             </div>
                             <br>
                         {% endif %}
@@ -27,9 +27,9 @@
                             <p class="text-right">
                                     <span style="cursor: pointer;">
                                     {% if current_user in share.like_users %}
-                                        <i class="bi bi-suit-heart praise-del" style="color:red"></i>
+                                        <i class="bi bi-heart-fill praise-del" style="color:red"></i>
                                     {% else %}
-                                        <i class="bi bi-suit-heart praise-add"></i>
+                                        <i class="bi bi-heart-fill praise-add"></i>
                                     {% endif %}
                                         <span class="praise-num">{{ share.like_users_count() }}</span></span>
                             </p>
@@ -58,10 +58,8 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         {% endfor %}
     </div>
-    {{ pager(pagination, user_id=current_user.id) }}
+    {{ pager_full(pagination, user_id=current_user.id) }}
 {% endblock body %}

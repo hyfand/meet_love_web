@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, current_app, send_from_directory, request, url_for
+from flask_login import current_user
 from flask_ckeditor import upload_success, upload_fail
 from flask_ckeditor.utils import random_filename
 from app.models.user import User
@@ -37,3 +38,12 @@ def upload():
     f.save(os.path.join(current_app.config['UPLOADED_PATH'], new_filename))
     url = url_for('main.uploaded_files', filename=new_filename)
     return upload_success(url=url)
+
+
+@main_bp.route("/person/<int:user_id>")
+@main_bp.route("/person/<int:user_id>/<int:page>")
+def person(user_id, page=1):
+    user = User.query.filter_by(id=user_id).first()
+    pagination = Share.query.filter_by(author_id=user_id).order_by(Share.publish_time.desc()).paginate(page, 10)
+    shares = pagination.items
+    return render_template("/person_page.html", shares=shares, pagination=pagination, user=user)

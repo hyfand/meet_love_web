@@ -43,6 +43,7 @@ def register_app_command(app):
                 register_time=fake.date_this_century(),
                 confirm=True
             )
+            user.follow(user)
             db.session.add(user)
             db.session.commit()
 

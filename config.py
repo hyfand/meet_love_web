@@ -17,8 +17,8 @@ class BaseConfig:
     AVATARS_SAVE_PATH = os.path.join(base_dir, "avatars")  # 头像
     AVATARS_SIZE_TUPLE = (30, 100, 300)
     AVATARS_CROP_PREVIEW_SIZE = 100
-    AVATARS_CROP_INIT_SIZE = 100
-    # AVATARS_CROP_BASE_WIDTH = 350
+    # AVATARS_CROP_INIT_SIZE = 100
+    AVATARS_CROP_BASE_WIDTH = 350
     MAX_CONTENT_LENGTH = 3 * 1024 * 1024
 
     DROPZONE_MAX_FILE_SIZE = 3
@@ -32,12 +32,12 @@ class BaseConfig:
 
 
 class DevelopConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test?charset=utf8mb4"
     # SQLALCHEMY_ECHO = True
 
 
 class ProductConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love?charset=utf8mb4"
 
 
 Config = {

@@ -67,4 +67,3 @@ function praise(dom, op) {
         }
     )
 }
-// 点赞 end

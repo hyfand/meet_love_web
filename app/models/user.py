@@ -7,6 +7,16 @@ from flask_login import UserMixin
 from flask_avatars import Identicon
 from app.models.share import share_like_table
 
+class Follow(db.Model):
+    __tablename__ = "tbl_follow"
+
+    follower_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    follower = db.relationship("User", foreign_keys=[follower_id], back_populates="following", lazy="joined")
+    followed = db.relationship("User", foreign_keys=[followed_id], back_populates="followers", lazy="joined")
+
 class User(db.Model, UserMixin):
     __tablename__ = "tbl_user"
     id = Column(Integer, primary_key=True)
@@ -30,9 +40,14 @@ class User(db.Model, UserMixin):
 
     like_shares = db.relationship("Share", secondary=share_like_table, back_populates="like_users")
 
+    following = db.relationship("Follow", foreign_keys=[Follow.follower_id], back_populates="follower", lazy="dynamic", cascade="all")
+    followers = db.relationship("Follow", foreign_keys=[Follow.followed_id], back_populates="followed", lazy="dynamic",
+                                cascade="all")
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.generate_avatar()
+        self.follow(self)
 
     @property
     def password(self):
@@ -55,3 +70,32 @@ class User(db.Model, UserMixin):
         self.avatar_m = filenames[1]
         self.avatar_l = filenames[2]
         db.session.commit()
+
+    def follow(self, user):
+        if not self.is_following(user):
+            follow = Follow(follower=self, followed=user)
+            db.session.add(follow)
+            db.session.commit()
+            return True
+        return False
+
+    def unfollow(self, user):
+        follow = self.following.filter_by(followed_id=user.id).first()
+        if follow:
+            db.session.delete(follow)
+            db.session.commit()
+            return True
+        return False
+
+    def is_following(self, user):
+        if user.id is None:
+            return False
+        return self.following.filter_by(followed_id=user.id).first() is not None
+
+    def is_followed_by(self, user):
+        return self.followers.filter_by(follower_id=user.id).first() is not None
+
+    # 所有用户关注自己
+    def follow_self_all(self):
+        for user in User.query.all():
+            user.follow(user)

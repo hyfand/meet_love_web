@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, abort, jsonify
 from app.models.share import Share
+from app.models.user import Follow
 from app.extensions import db
 from flask_login import current_user, login_required
 from app.form.share import ShareForm, ShareDeleteForm
@@ -53,7 +54,6 @@ def shares(user_id, page=1):
     shares = pagination.items
     return render_template("share/shares.html", shares=shares, pagination=pagination, form=form)
 
-
 @share_bp.route("/delete_share/<int:sid>", methods=["POST"])
 @login_required
 def delete_share(sid):
@@ -79,9 +79,21 @@ def praise_share():
     share_id = int(json.get("share_id"))
     op = json.get("op")
     share = Share.query.filter_by(id=share_id).first()
-    if op == -1:
+    if op == -1 and current_user in share.like_users:
         share.like_users.remove(current_user)
-    elif op == 1:
+    elif op == 1 and current_user not in share.like_users:
         share.like_users.append(current_user)
     db.session.commit()
     return jsonify({"status": "ok"}), 200
+
+
+
+@share_bp.route("/concern_shares")
+@share_bp.route("/concern_shares/<int:page>")
+@login_required
+def concern_shares(page=1):
+    followed = db.session.query(Follow.followed_id).filter(Follow.follower_id == current_user.id).subquery()
+    Share.query.filter(Share.author_id.in_(followed))
+    pagination = Share.query.order_by(Share.publish_time.desc()).paginate(page, 10)
+    shares = pagination.items
+    return render_template("concerns.html", shares=shares, pagination=pagination)

@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field, pager_full%}
+{% block body %}
+    <div class="card mb-2">
+        <div class="card-header">
+            {% if follow_relation == "following" %}
+                我的关注
+            {% elif follow_relation == "followers" %}
+                关注我的
+            {% endif %}
+            <span class="badge badge-primary">{{ follow_list | length }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% if follow_relation == "following" %}
+                    {% for follow in follow_list %}
+                        <div class="col-md-4">
+                            <a href="{{ url_for("main.person", user_id=follow.followed.id) }}" class="align-bottom text-dark" style="text-decoration: none; text-align: center">
+                                <img class="rounded p-1"
+                                 src="{{ url_for("main.get_avatar", filename=follow.followed.avatar_m) }}" width=40 alt="">
+                                <span class="align-middle">{{ follow.followed.user_name }}</span>
+                                <span class="align-middle">{{ follow.followed.nick_name }}</span>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% elif follow_relation == "followers" %}
+                    {% for follow in follow_list %}
+                        <div class="col-md-4">
+                            <a href="{{ url_for("main.person", user_id=follow.follower.id) }}" class="align-bottom text-dark" style="text-decoration: none">
+                                <img class="rounded p-1"
+                                     src="{{ url_for("main.get_avatar", filename=follow.follower.avatar_m) }}" width=40
+                                     alt="">
+                                <span class="align-middle">{{ follow.follower.user_name }}</span>
+                                <span class="align-middle">{{ follow.follower.nick_name }}</span>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {{ pager_full(pagination, follow_relation=follow_relation, user_id=user_id) }}
+{% endblock body %}

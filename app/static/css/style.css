@@ -1,0 +1,23 @@
+.bi {
+    font-size: 30px;
+}
+
+@media (min-width: 576px) {
+    .bi{
+        font-size: 20px;
+    }
+
+
+}
+
+* {
+    touch-action: pan-y;
+}
+
+.share_img {
+    max-width: 300px;
+}
+
+.share {
+    font-size: 0.8rem;
+}

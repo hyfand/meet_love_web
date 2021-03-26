@@ -7,8 +7,6 @@
         <div class="alert alert-info">为了维护良好的交友环境, 大家一定要真实填写, 如有虚假信息将以封号处理哟~~~</div>
         {{ form_field(form.user_name) }}
         {{ form_field(form.nick_name) }}
-        {{ form_field(form.real_name, annotation="<span class='badge badge-info'>确定后不能修改</span>") }}
-        {{ form_field(form.id_number, annotation="<span class='badge badge-info'>确定后不能修改</span>") }}
         {{ form_field(form.sex, annotation="<span class='badge badge-info'>确定后不能修改</span>") }}
         {{ form_field(form.password, annotation="<span class='badge badge-info'>8-16位 必须包含大小写字母/数字</span>") }}
         {{ form_field(form.password_repeat) }}

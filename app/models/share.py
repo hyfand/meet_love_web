@@ -1,15 +1,13 @@
 from app.extensions import db
 from sqlalchemy import Column
-from sqlalchemy import Integer, String, DateTime, Boolean, SmallInteger, Text
+from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
-from app.extensions import login_manager
 
 
-share_like_table = db.Table("share_like_table",
+share_like_table = db.Table("tbl_share_like",
                             db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id")),
                             db.Column("user_id", db.Integer, db.ForeignKey("tbl_user.id")))
+
 
 
 class Share(db.Model):

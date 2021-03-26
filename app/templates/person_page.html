@@ -1,0 +1,172 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import form_field, check_field %}
+{% from "_macro.html" import pager_full %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-3 d-none d-md-block d-lg-block d-xl-block">
+            <div class="card sticky-top" style="top: 100px;">
+                <div class="card-body">
+                    <img class="img-fluid rounded mb-3" src="{{ url_for("main.get_avatar", filename=user.avatar_l) }}"
+                         alt="">
+                    <h5 class="card-title">{{ user.user_name }}</h5>
+                    <p class="card-text">{{ user.nick_name }}</p>
+                    <p class="card-text" style="font-size: 14px; color: #636363;">{{ user.manifesto }}</p>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_following(user) %}
+                            {% if current_user.is_followed_by(user) %}
+                                <p class="badge badge-info" style="display: block">已经互相关注</p>
+                            {% endif %}
+                            <button class="btn btn-danger btn-sm follow_btn to_follow" data-follow="0">取消关注</button>
+                        {% else %}
+                            {% if current_user.is_followed_by(user) %}
+                                <p class="badge badge-info" style="display: block">已经被ta关注</p>
+                            {% endif %}
+                            <button class="btn btn-primary btn-sm follow_btn to_follow" data-follow="1">关注</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="btn btn-primary btn-sm follow_btn need_login">关注</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-sm-12">
+            {% for share in shares %}
+                <div class="col-md-12 mb-3 share-data" data-id={{ share.id }}>
+                    <div class="card">
+                        <div class="card-body">
+                            {% if share.img %}
+                                <div class="text-left">
+                                    <img src="{{ url_for("main.uploaded_files", filename=share.img) }}"
+                                         class="share_img">
+                                </div>
+                                <br>
+                            {% endif %}
+                            <p class="share">{{ share.content | safe }}</p>
+                            <p class="text-right">
+                                        <span style="cursor: pointer;">
+                                        {% if current_user.is_authenticated %}
+                                            {% if current_user in share.like_users %}
+                                                <i class="bi bi-heart-fill praise-del" style="color:red"></i>
+                                            {% else %}
+                                                <i class="bi bi-heart-fill praise-add"></i>
+                                            {% endif %}
+                                        {% else %}
+                                            <i class="bi bi-heart-fill praise-add" data-toggle="modal"
+                                               data-target="#loginRequireModal"></i>
+                                        {% endif %}
+
+                                            <span class="praise-num">{{ share.like_users_count() }}</span></span>
+                            </p>
+                            <p class="text-secondary text-right"
+                               style="font-size:16px; margin-bottom:0">{{ moment(share.publish_time).format("LLL") }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <img class="fixed-bottom rounded-circle shadow-lg p-1 bg-gradient-info rounded d-block d-sm-block d-md-none"
+                 src="{{ url_for("main.get_avatar", filename=user.avatar_l) }}"
+                 alt="" width="80px" data-toggle="modal" data-target="#UserInfoModal" style="bottom: 84px; left: 24px;">
+
+            <!-- 要求登录模态框 -->
+            {% include "modal/login_require.html" %}
+
+            <!-- 个人信息模态框 -->
+            <!-- Modal -->
+            <div class="modal fade" id="UserInfoModal" tabindex="-1" aria-labelledby="UserInfoLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title" id="UserInfo">个人信息</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="img-fluid rounded"
+                                 src="{{ url_for("main.get_avatar", filename=user.avatar_l) }}"
+                                 alt="">
+                            <h5 class="card-title">{{ user.user_name }}</h5>
+                            <p class="card-text">{{ user.nick_name }}</p>
+                            <p class="card-text" style="font-size: 14px; color: #636363;">{{ user.manifesto }}</p>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.is_following(user) %}
+                                    {% if current_user.is_followed_by(user) %}
+                                        <p class="badge badge-info" style="width:160px; display: block">已经互相关注</p>
+                                    {% endif %}
+                                    <button class="btn btn-danger btn-sm follow_btn to_follow" data-follow="0">取消关注</button>
+                                {% else %}
+                                    {% if current_user.is_followed_by(user) %}
+                                        <p class="badge badge-info" style="width:160px; display: block">已经被ta关注</p>
+                                    {% endif %}
+                                    <button class="btn btn-primary btn-sm follow_btn to_follow" data-follow="1">关注</button>
+                                {% endif %}
+                            {% else %}
+                                <button class="btn btn-primary btn-sm follow_btn need_login">关注</button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                {{ pager_full(pagination, user_id=user.id) }}
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(".need_login").click(function () {
+            $("#UserInfoModal").modal('hide');
+            $("#loginRequireModal").modal('show');
+        })
+
+        $(".to_follow").click(function () {
+            var follow_dom = $(this);
+            var follow_flag = follow_dom.attr("data-follow");
+            var data = {
+                "followed_id": parseInt({{ user.id }}),
+                "follow_flag": parseInt(follow_dom.attr("data-follow"))
+            };
+            var url = "{{ url_for('user.follow') }}";
+            $.ajax(
+                {
+                    url: url,
+                    type: "post",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        if (data["status"] == "ok"){
+                           if (follow_dom.siblings(".badge").length){
+                               follow_dom.siblings(".badge").remove();
+                           };
+
+                           if (follow_flag == 1){
+                               // 关注成功
+                               follow_dom.text("取消关注").attr("data-follow", 0).removeClass("btn-primary").addClass("btn-danger");
+                               if (data["is_followed"] == true){
+                                   follow_dom.before("<p class=\"badge badge-info\">已经互相关注</p>");
+                               };
+                           } else if (follow_flag == 0){
+                               // 取消关注成功
+                               follow_dom.text("关注").attr("data-follow", 1).removeClass("btn-danger").addClass("btn-primary");
+                               if (data["is_followed"] == true){
+                                   follow_dom.before("<p class=\"badge badge-info\">已经被ta关注</p>");
+                               };
+                           }
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                }
+            )
+        })
+    </script>
+{% endblock script %}

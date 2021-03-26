@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+import os
+from PIL import Image
+from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request, jsonify
 from app.form.user import UserRegisterForm, UserLoginForm, UserChangeInfoForm, UserChangePasswordForm, UserAvatarForm, CropAvatarForm
 from app.models.user import *
 from app.extensions import db, avatars
@@ -24,8 +26,8 @@ def register():
             user = User(
                 user_name=form.user_name.data,
                 nick_name=form.nick_name.data,
-                real_name=form.real_name.data,
-                id_number=form.id_number.data,
+                # real_name=form.real_name.data,
+                # id_number=form.id_number.data,
                 sex=form.sex.data,
                 password=form.password.data,
                 email=form.email.data,
@@ -88,7 +90,10 @@ def user_avatar_upload():
     form = UserAvatarForm()
     if form.validate_on_submit():
         image = form.image.data
-        filename = avatars.save_avatar(image)
+        raw_img = Image.open(image)
+        if raw_img.size[0] > 300:
+            raw_img = avatars.resize_avatar(raw_img, 300)
+        filename = avatars.save_avatar(raw_img)
         current_user.avatar_raw = filename
         db.session.commit()
         flash("头像上传成功, 请剪切哟")
@@ -112,6 +117,7 @@ def user_avatar_crop():
         current_user.avatar_l = filenames[2]
         db.session.commit()
         flash("头像上传成功！")
+
     return redirect(url_for(".user_avatar_modify"))
 
 @user_bp.route("/user_info_modify", methods=["GET", "POST"])
@@ -163,3 +169,45 @@ def user_password_modify():
         else:
             flash("哎呀 😱 请检查输入是否正确！")
     return render_template("user/user_password_modify.html", form=form)
+
+
+@user_bp.route("/follow", methods=["POST"])
+@login_required
+def follow():
+    json = request.get_json()
+    followed_id = json.get("followed_id")
+    follow_flag = json.get("follow_flag")
+    if followed_id and follow_flag in (0, 1):
+        followed = User.query.filter_by(id=followed_id).first()
+        if follow_flag == 1:
+            if current_user.follow(followed):
+                is_followed = current_user.is_followed_by(followed)
+                res = {"status": "ok", "msg": "follow", "is_followed": is_followed}
+                response_code = 200
+            else:
+                res = {"status": "error", "msg": "repeat follow"}
+                response_code = 400
+        elif follow_flag == 0:
+            if current_user.unfollow(followed):
+                is_followed = current_user.is_followed_by(followed)
+                res = {"status": "ok", "msg": "cancel follow", "is_followed": is_followed}
+                response_code = 200
+            else:
+                res = {"status": "error", "msg": "have not followed"}
+                response_code = 400
+    else:
+        res = {"status": "error", "msg": "error argument"}
+        response_code = 400
+    return jsonify(res), response_code
+
+
+@user_bp.route("user_follow/<follow_relation>/<int:user_id>/<int:page>")
+@login_required
+def user_following(follow_relation, user_id, page=1):
+    if follow_relation == "following":
+        pagination = Follow.query.filter_by(follower_id=user_id).order_by(Follow.timestamp.desc()).paginate(page, 50)
+        follow_list = pagination.items
+    elif follow_relation == "followers":
+        pagination = Follow.query.filter_by(followed_id=user_id).order_by(Follow.timestamp.desc()).paginate(page, 50)
+        follow_list = pagination.items
+    return render_template("user/user_follow.html", follow_relation=follow_relation,  follow_list=follow_list, pagination=pagination, user_id=user_id)
