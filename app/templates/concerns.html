@@ -2,6 +2,19 @@
 {% from "_macro.html" import pager_full %}
 {% block body %}
 <div class="row">
+        {% if shares|length == 0 %}
+            <div class="col-md-12 mb-3" >
+                <div class="card">
+                    <div class="card-header">
+                        小提示
+                    </div>
+                    <div class="card-body">
+                        你还没有关注的小宝贝~~<br>
+                        这里会列出你所关注的朋友的最新分享。
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         {% for share in shares %}
             <div class="col-md-12 mb-3 share-data" data-id={{ share.id }}>
                 <div class="card">
@@ -45,5 +58,5 @@
         {% include "modal/login_require.html" %}
 
     </div>
-    {{ pager_full(pagination, user_id=current_user.id) }}
+    {{ pager_full(pagination) }}
 {% endblock body %}

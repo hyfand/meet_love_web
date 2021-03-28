@@ -6,6 +6,7 @@ from app.extensions import db
 from flask_login import current_user, login_required
 from app.form.share import ShareForm, ShareDeleteForm
 from app.utils import random_filename, redirect_back, compress_image
+from sqlalchemy import and_
 
 share_bp = Blueprint("share", __name__, url_prefix="/share")
 
@@ -93,7 +94,6 @@ def praise_share():
 @login_required
 def concern_shares(page=1):
     followed = db.session.query(Follow.followed_id).filter(Follow.follower_id == current_user.id).subquery()
-    Share.query.filter(Share.author_id.in_(followed))
-    pagination = Share.query.order_by(Share.publish_time.desc()).paginate(page, 10)
+    pagination = Share.query.filter(and_(Share.author_id.in_(followed), Share.author_id != current_user.id)).order_by(Share.publish_time.desc()).paginate(page, 10)
     shares = pagination.items
     return render_template("concerns.html", shares=shares, pagination=pagination)
