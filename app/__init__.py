@@ -3,7 +3,7 @@ from app.commands import register_app_command
 from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
-from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone
+from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone, whooshee
 from flask_uploads import configure_uploads, patch_request_class
 from app.uploads_set import photos
 
@@ -31,6 +31,7 @@ def create_app(config_name=None):
     login_manager.login_message = '无权访问, 请登录。'
     avatars.init_app(app)
     dropzone.init_app(app)
+    whooshee.init_app(app)
 
     configure_uploads(app, (photos, ))
     patch_request_class(app, 8 * 1024 * 1204)

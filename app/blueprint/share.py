@@ -17,6 +17,7 @@ def new_share():
     form = ShareForm()
     if form.validate_on_submit():
         f = request.files.get('img')
+        print(666)
         if f:
             new_filename = random_filename(f.filename)
             file = os.path.join(current_app.config['UPLOADED_PATH'], new_filename)
@@ -29,6 +30,7 @@ def new_share():
             content=form.content.data,
             author_id=current_user.id
         )
+
         try:
             db.session.add(new_share)
             db.session.commit()
@@ -36,6 +38,7 @@ def new_share():
             return redirect(url_for("share.shares", user_id=current_user.id))
         except Exception:
             flash("发布失败 😱 请联系管理员！")
+            return redirect_back()
     return render_template("share/new_share.html", form=form)
 
 

@@ -1,4 +1,4 @@
-from app.extensions import db
+from app.extensions import db, whooshee
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime, Boolean, SmallInteger, Text
 from datetime import datetime
@@ -17,6 +17,7 @@ class Follow(db.Model):
     follower = db.relationship("User", foreign_keys=[follower_id], back_populates="following", lazy="joined")
     followed = db.relationship("User", foreign_keys=[followed_id], back_populates="followers", lazy="joined")
 
+@whooshee.register_model("user_name", "nick_name")
 class User(db.Model, UserMixin):
     __tablename__ = "tbl_user"
     id = Column(Integer, primary_key=True)

@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import pager_full %}
+{% block body %}
+<div class="row">
+        {% if category=="user" %}
+            <div class="col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        搜索 <span class="badge badge-primary" style="font-size: 20px;">{{ q }}</span> 的用户： {{ pagination.total }}
+                    </div>
+                    <div class="card-body">
+                    {% if result|length == 0 %}
+                        没有符合的搜索结果~ 不好意思~~
+                    {% endif %}
+                    {% for r in result %}
+                    <div class="col-md-12">
+                            <a href="{{ url_for("main.person", user_id=r.id) }}" class="align-bottom text-dark" style="text-decoration: none; text-align: center">
+                                <img class="rounded p-1"
+                                 src="{{ url_for("main.get_avatar", filename=r.avatar_m) }}" width=40 alt="">
+                                <span class="align-middle">{{ r.user_name }}</span>
+                                <span class="align-middle">{{ r.nick_name }}</span>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+
+        <!-- 要求登录模态框 -->
+        {% include "modal/login_require.html" %}
+
+    </div>
+    {{ pager_full(pagination, q=q, category=category) }}
+{% endblock body %}

@@ -43,6 +43,7 @@ def register_app_command(app):
                 register_time=fake.date_this_century(),
                 confirm=True
             )
+            print(user)
             user.follow(user)
             db.session.add(user)
             db.session.commit()
@@ -57,6 +58,7 @@ def register_app_command(app):
                 update_time=fake.date_time_between(start_date='-10d'),
                 be_reported_num=random.randint(0, 20)
             )
+            print(share)
             db.session.add(share)
             db.session.commit()
         click.echo('虚拟数据创建成功!')

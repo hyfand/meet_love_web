@@ -5,6 +5,7 @@ from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
 from flask_avatars import Avatars
 from flask_dropzone import Dropzone
+from flask_whooshee import Whooshee
 
 
 login_manager = LoginManager()
@@ -20,3 +21,4 @@ moment = Moment()
 csrf = CSRFProtect()
 avatars = Avatars()
 dropzone = Dropzone()
+whooshee = Whooshee()

@@ -34,18 +34,18 @@
                         <a class="nav-link" href="{{ url_for('share.concern_shares') }}">关心</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownQ" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownQ">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>
+{#                    <li class="nav-item dropdown">#}
+{#                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownQ" role="button"#}
+{#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                            Dropdown#}
+{#                        </a>#}
+{#                        <div class="dropdown-menu" aria-labelledby="navbarDropdownQ">#}
+{#                            <a class="dropdown-item" href="#">Action</a>#}
+{#                            <a class="dropdown-item" href="#">Another action</a>#}
+{#                            <div class="dropdown-divider"></div>#}
+{#                            <a class="dropdown-item" href="#">Something else here</a>#}
+{#                        </div>#}
+{#                    </li>#}
                 </ul>
                 {% if current_user.is_authenticated %}
                     <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_s) }}" width="30" height="30"
@@ -78,9 +78,9 @@
                     {% endif %}
                 </ul>
 
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="搜索" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search') }}">
+                    <input class="form-control mr-sm-2" name="q" type="search" placeholder="搜索用户名或昵称" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
                 </form>
             </div>
         </nav>
