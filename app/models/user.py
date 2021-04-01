@@ -5,7 +5,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask_avatars import Identicon
-from app.models.share import share_like_table
+from app.models.share import share_like_table, Comment
 
 class Follow(db.Model):
     __tablename__ = "tbl_follow"
@@ -44,6 +44,9 @@ class User(db.Model, UserMixin):
     following = db.relationship("Follow", foreign_keys=[Follow.follower_id], back_populates="follower", lazy="dynamic", cascade="all")
     followers = db.relationship("Follow", foreign_keys=[Follow.followed_id], back_populates="followed", lazy="dynamic",
                                 cascade="all")
+
+    comments = db.relationship("Comment", foreign_keys=[Comment.user_id], back_populates="user", lazy="dynamic", cascade="all")
+    receive_comments = db.relationship("Comment", foreign_keys=[Comment.to_user_id], back_populates="to_user", lazy="dynamic", cascade="all")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
