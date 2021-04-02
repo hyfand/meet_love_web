@@ -67,3 +67,9 @@ function praise(dom, op) {
         }
     )
 }
+
+// 列表点评论按钮跳转
+$(".comment_icon").click(function () {
+    var share_id = $(this).parents(".share-data").attr("data-id");
+    $(window).attr('location','/share/share_detail/' + share_id);
+})

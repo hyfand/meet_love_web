@@ -1,26 +1,115 @@
 {% extends "_base.html" %}
-{% from "_macro.html" import form_field, check_field %}
+{% from "_macro.html" import post_comment %}
 {% block body %}
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 share-data" data-id={{ share.id }}>
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <a class="col-md-4">
-                            <img src="{{ url_for("main.get_avatar", filename=current_user.avatar_s) }}" class="img-thumbnail" alt="" width="">
-                        </a>
-                        <span class="text-right text-secondary  mt-2 col-md-8">{{ moment(share.publish_time).format("LLL") }}</span>
+                        <span class="col-5">
+                            <a href="{{ url_for("main.person", user_id=share.author_id) }}" style="text-decoration: none">
+                                <img src="{{ url_for("main.get_avatar", filename=share.author.avatar_s) }}" class="img-thumbnail" alt="" width="">
+                                    <span class="align-middle text-dark" style="font-size:18px; margin-bottom:0">{{ share.author.nick_name }}</span>
+                            </a>
+                        </span>
+                        <span class="text-right text-secondary  mt-2 col-7" style="font-size: 14px;">{{ moment(share.publish_time).format("LLL") }}</span>
                     </div>
                 </div>
                 <div class="card-body">
-                    {{ share.content | safe }}
+                    <p class="share">{{ share.content | safe }}</p>
+
+                    <p class="text-right">
+                                    <span style="cursor: pointer;" class="like_icon">
+                                    {% if current_user.is_authenticated %}
+                                        {% if current_user in share.like_users %}
+                                            <i class="bi bi-heart-fill praise-del" style="color:red"></i>
+                                        {% else %}
+                                            <i class="bi bi-heart-fill praise-add"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        <i class="bi bi-heart-fill" data-toggle="modal" data-target="#loginRequireModal"></i>
+                                    {% endif %}
+                                        <span class="praise-num">{{ share.like_users_count() }}</span>
+                                    </span>
+
+                                    <span style="cursor: pointer;" class="detail_comment_icon ml-2">
+                                        {% if current_user.is_authenticated %}
+                                        <i class="bi bi-chat-right-dots-fill" id="box_comment"></i>
+                                        {% else %}
+                                        <i class="bi bi-chat-right-dots-fill"  data-toggle="modal" data-target="#loginRequireModal"></i>
+                                        {% endif %}
+                                        <span class="praise-num">{{ share.comments_count() }}</span>
+                                    </span>
+
+
+                            </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% for comment in share.comments %}
+                <p>
+                    {{ comment.user.nick_name }}
+                    {{ comment.content }}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <!-- 要求登录模态框 -->
+    {% include "modal/login_require.html" %}
+    <!-- 评论 Modal -->
+    <div class="modal fade" id="BoxCommentModel" tabindex="-1" aria-labelledby="BoxCommentModel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title" id="BoxCommentModalLabel"></p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="{{ url_for("share.publish_comment") }}" method="post">
+              <div class="modal-body">
+
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <input type="hidden" name="user_id" value="">
+                      <input type="hidden" name="to_user_id" value="">
+                      <input type="hidden" name="to_share_id" value="">
+                      <input type="hidden" name="parent_id" value="">
+                      <textarea class="form-control" id="comment_text" rows="10" name="comment_text"></textarea>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">发布评论</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
 {% endblock body %}
 {% block script %}
     {{ super() }}
     {{ moment.include_moment(local_js=url_for("static", filename="js/moment-with-locales.js")) }}
     {{ moment.locale(auto_detect=True) }}
+    <script>
+        $("#box_comment").click(function () {
+            var title = "回复给 {{ share.author.nick_name }}";
+            $("input[name='user_id']").val({{ current_user.id }});
+            $("input[name='to_user_id']").val({{ share.author_id }});
+            $("input[name='to_share_id']").val({{ share.id }});
+            $("input[name='parent_id']").val(-1);
+
+            $("#BoxCommentModalLabel").text(title);
+            $('#BoxCommentModel').modal('show');
+        })
+    </script>
 {% endblock script %}
+

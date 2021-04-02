@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, abort, jsonify
-from app.models.share import Share
+from app.models.share import Share, Comment
 from app.models.user import Follow
 from app.extensions import db
 from flask_login import current_user, login_required
@@ -17,7 +17,6 @@ def new_share():
     form = ShareForm()
     if form.validate_on_submit():
         f = request.files.get('img')
-        print(666)
         if f:
             new_filename = random_filename(f.filename)
             file = os.path.join(current_app.config['UPLOADED_PATH'], new_filename)
@@ -76,7 +75,7 @@ def delete_share(sid):
     return redirect_back()
 
 
-@share_bp.route("/praise_share", methods=["post"])
+@share_bp.route("/praise_share", methods=["POST"])
 @login_required
 def praise_share():
     json = request.get_json()
@@ -100,3 +99,25 @@ def concern_shares(page=1):
     pagination = Share.query.filter(and_(Share.author_id.in_(followed), Share.author_id != current_user.id)).order_by(Share.publish_time.desc()).paginate(page, 10)
     shares = pagination.items
     return render_template("concerns.html", shares=shares, pagination=pagination)
+
+
+@share_bp.route("/publish_comment", methods=["POST"])
+@login_required
+def publish_comment():
+    content = request.form.get("comment_text")
+    user_id = request.form.get("user_id", type=int)
+    to_user_id = request.form.get("to_user_id", type=int)
+    to_share_id = request.form.get("to_share_id", type=int)
+    parent_id = request.form.get("parent_id", type=int)
+    if content and user_id and to_user_id and to_share_id and parent_id:
+        comment = Comment(
+            content=content,
+            user_id=user_id,
+            to_user_id=to_user_id,
+            to_share_id=to_share_id,
+            parent_id=parent_id
+        )
+        db.session.add(comment)
+        db.session.commit()
+        flash("😘评论成功")
+    return redirect_back()

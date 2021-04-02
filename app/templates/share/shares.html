@@ -1,5 +1,4 @@
 {% extends "_base.html" %}
-{% from "_macro.html" import form_field, check_field %}
 {% from "_macro.html" import pager_full %}
 {% block body %}
     <div class="row">
@@ -25,13 +24,19 @@
                         <div class="text-left">
                             <p class="share">{{ share.content | safe }}</p>
                             <p class="text-right">
-                                    <span style="cursor: pointer;">
+                                    <span style="cursor: pointer;" class="like_icon">
                                     {% if current_user in share.like_users %}
                                         <i class="bi bi-heart-fill praise-del" style="color:red"></i>
                                     {% else %}
                                         <i class="bi bi-heart-fill praise-add"></i>
                                     {% endif %}
-                                        <span class="praise-num">{{ share.like_users_count() }}</span></span>
+                                        <span class="praise-num">{{ share.like_users_count() }}</span>
+                                    </span>
+
+                                    <span style="cursor: pointer;" class="comment_icon ml-2">
+                                        <i class="bi bi-chat-right-dots-fill"></i>
+                                        <span class="praise-num">{{ share.comments_count() }}</span>
+                                    </span>
                             </p>
 
 

@@ -20,11 +20,13 @@ class Share(db.Model):
     be_reported_num = Column(db.Integer, default=0)  # 被举报次数
     like_users = db.relationship("User", secondary=share_like_table, back_populates="like_shares")
 
-    comments = db.relationship("Comment", foreign_keys=[Comment.share_id], back_populates="share", lazy="dynamic", cascade="all")
+    comments = db.relationship("Comment", backref="share", cascade="all")
 
     def like_users_count(self):
         return len(self.like_users)
 
+    def comments_count(self):
+        return len(self.comments)
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
@@ -38,7 +40,7 @@ class Comment(db.Model):
     to_user_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"))  # 被评论作者id
     to_user = db.relationship("User", foreign_keys=[to_user_id], back_populates="receive_comments", lazy="joined")
 
-    share_id = db.Column(db.Integer, db.ForeignKey("tbl_share.id"))  # 被评论的分享的id
-    share = db.relationship("Share", foreign_keys=[Share.id], back_populates="comments", lazy="joined")
+    to_share_id = db.Column(db.Integer, db.ForeignKey("tbl_share.id"))  # 被评论的分享的id
+    to_share = db.relationship("Share", foreign_keys=[to_share_id], back_populates="comments", lazy="joined")
 
     parent_id = db.Column(db.Integer)  # 父评论id 支持多级评论

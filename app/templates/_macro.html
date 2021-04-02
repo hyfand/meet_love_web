@@ -60,3 +60,26 @@
   </ul>
 </nav>
 {% endmacro %}
+
+
+{#回复模态框#}
+{% macro post_comment(title, id) %}
+    <div class="modal fade" id="box_comment" tabindex="-1" aria-labelledby="box_comment" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title" id="box_commentModalLabel">{{ title }}</p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">发布评论</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endmacro %}
