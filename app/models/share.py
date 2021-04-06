@@ -20,13 +20,13 @@ class Share(db.Model):
     be_reported_num = Column(db.Integer, default=0)  # 被举报次数
     like_users = db.relationship("User", secondary=share_like_table, back_populates="like_shares")
 
-    comments = db.relationship("Comment", backref="share", cascade="all")
+    comments = db.relationship("Comment", backref="share", cascade="all", lazy="dynamic")
 
     def like_users_count(self):
         return len(self.like_users)
 
     def comments_count(self):
-        return len(self.comments)
+        return self.comments.count()
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
