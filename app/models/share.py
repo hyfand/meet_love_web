@@ -30,6 +30,9 @@ class Share(db.Model):
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
+    __table_args__ = {"extend_existing": True}
+
+
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200))
     time_stamp = Column(DateTime, default=datetime.utcnow)
@@ -43,4 +46,5 @@ class Comment(db.Model):
     to_share_id = db.Column(db.Integer, db.ForeignKey("tbl_share.id"))  # 被评论的分享的id
     to_share = db.relationship("Share", foreign_keys=[to_share_id], back_populates="comments", lazy="joined")
 
-    parent_id = db.Column(db.Integer)  # 父评论id 支持多级评论
+    parent_id = db.Column(db.Integer, db.ForeignKey("tbl_comment.id"))  # 父评论id 支持多级评论
+    sub_comments = db.relationship("Comment", foreign_keys=[parent_id], cascade="all", lazy="dynamic")

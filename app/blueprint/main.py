@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.share import Share
 import os
 from app.utils import redirect_back
+from sqlalchemy.sql.expression import func
 
 main_bp = Blueprint("main", __name__)
 
@@ -64,3 +65,14 @@ def search():
     result = pagination.items
 
     return render_template("search_result.html", result=result, pagination=pagination, q=q, category=category)
+
+
+@main_bp.route("/explore")
+def explore():
+    shares = Share.query.order_by(func.random()).limit(5)
+    return render_template("explore.html", shares=shares)
+
+
+@main_bp.route("/about_site")
+def about_site():
+    return render_template("about_site.html")

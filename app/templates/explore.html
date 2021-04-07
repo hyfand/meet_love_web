@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+{% block body %}
+<div class="row">
+        {% for share in shares %}
+            <div class="col-md-12 mb-3 share-data" data-id={{ share.id }} {% if loop.index == 1 %}id="explore"{% endif %}>
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{{ url_for("main.person", user_id=share.author_id) }}" style="text-decoration: none">
+                            <img class="rounded p-1" src="{{ url_for("main.get_avatar", filename=share.author.avatar_m) }}" width=40 alt="">
+                                <span class="align-middle text-dark" style="font-size:18px; margin-bottom:0">{{ share.author.nick_name }}</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if share.img %}
+                            <div class="text-left">
+                                <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="share_img">
+                            </div>
+                            <br>
+                        {% endif %}
+                        <p class="share">{{ share.content | safe }}</p>
+                        <p class="text-right">
+                                    <span style="cursor: pointer;" class="like_icon">
+                                    {% if current_user.is_authenticated %}
+                                        {% if current_user in share.like_users %}
+                                            <i class="bi bi-heart-fill praise-del" style="color:red"></i>
+                                        {% else %}
+                                            <i class="bi bi-heart-fill praise-add"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        <i class="bi bi-heart-fill" data-toggle="modal" data-target="#loginRequireModal"></i>
+                                    {% endif %}
+                                        <span class="praise-num">{{ share.like_users_count() }}</span>
+                                    </span>
+
+                                    <span style="cursor: pointer;" class="comment_icon ml-2">
+                                        <i class="bi bi-chat-right-dots-fill"></i>
+                                        <span class="praise-num">{{ share.comments_count() }}</span>
+                                    </span>
+
+                            </p>
+                        <p class="text-secondary text-right" style="font-size:16px; margin-bottom:0">{{ moment(share.publish_time).format("LLL") }}</p>
+                    </div>
+                </div>
+            </div>
+
+
+        {% endfor %}
+
+        <a href="{{ url_for('main.explore') }}" class="btn btn-primary fixed-bottom shadow-lg " style="border-radius: 1.5rem; bottom: 84px; right:6%; left: auto;">换一批</a>
+        <!-- 要求登录模态框 -->
+        {% include "modal/login_require.html" %}
+
+    </div>
+
+{% endblock body %}

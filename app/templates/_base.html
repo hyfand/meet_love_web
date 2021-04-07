@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
     {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -29,11 +29,17 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ url_for('main.index') }}">主页</a>
                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('main.explore') }}#explore">漂流瓶</a>
+                    </li>
                     {% if current_user.is_authenticated %}
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ url_for('share.concern_shares') }}">关心</a>
                     </li>
                     {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('main.about_site') }}">关于本站</a>
+                    </li>
 {#                    <li class="nav-item dropdown">#}
 {#                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownQ" role="button"#}
 {#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
@@ -94,7 +100,8 @@
                 </button>
             </div>
         {% endfor %}
-        {% block body %}{% endblock body %}
+        {% block body %}
+        {% endblock body %}
 
         {% if current_user.is_authenticated %}
             <div id="global-token" token={{ csrf_token() }}></div>
@@ -111,10 +118,9 @@
         {% endblock script %}
     </div>
     <footer>
-
         <hr>
         <div class="container">
-            {% block foot %}<p>电话: 18001202682</p>{% endblock foot %}
+            {% block foot %}<p class="text-center">遇爱工作室 版权所有</p>{% endblock foot %}
         </div>
     </footer>
 </div>

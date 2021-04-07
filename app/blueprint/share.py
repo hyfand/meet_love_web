@@ -45,7 +45,7 @@ def new_share():
 @share_bp.route("/share_detail/<int:share_id>/<int:page>", methods=["GET", "POST"])
 def share_detail(share_id, page=1):
     share = Share.query.get(share_id)
-    pagination = share.comments.order_by(Comment.time_stamp.desc()).paginate(page, 20)
+    pagination = share.comments.filter_by(parent_id=-1).order_by(Comment.time_stamp.desc()).paginate(page, 20)
     comments = pagination.items
     return render_template("share/share_detail.html", share=share, comments=comments, pagination=pagination)
 

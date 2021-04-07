@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+{% block body %}
+
+    <div class="jumbotron">
+      <h1 class="display-4">遇爱</h1>
+      <h1 class="display-6">遇见 X 喜爱</h1>
+      <p class="lead">这是一个专注于情感的分享平台</p>
+
+      <hr class="my-4">
+      <p class="lead">分享你的情感经历，寻找共鸣和答案</p>
+      <p class="lead">交到"心"朋友... ...</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('main.explore') }}" role="button">去探索</a>
+      </p>
+    </div>
+
+{% endblock body %}

@@ -60,28 +60,76 @@
                 <div class="card-header" style="background-color:#fff;">评论</div>
                 <div class="card-body">
                     {% for comment in comments %}
-                        <div class="row" style="font-size: 16px; color: #ccc;" >
-                            <span class="col-6">
-                                <a href="{{ url_for("main.person", user_id=comment.user.id) }}" style="text-decoration: none">
-                                    <img src="{{ url_for("main.get_avatar", filename=comment.user.avatar_s) }}" class="" alt=""
-                                         width="">
-                                    <span class="align-middle text-dark">{{ comment.user.nick_name }}</span>
-                                </a>
+                        <div class="one_comment" data-to_user_id={{ comment.user.id }} data-parent_id={{ comment.id }}
+                             data-to_comment_user={{ comment.user.nick_name }}>
+                            <div class="row" style="font-size: 16px; color: #ccc;">
+                                <span class="col-6">
+                                    <a href="{{ url_for("main.person", user_id=comment.user.id) }}"
+                                       style="text-decoration: none">
+                                        <img src="{{ url_for("main.get_avatar", filename=comment.user.avatar_s) }}"
+                                             class=""
+                                             alt=""
+                                             width="30px">
+                                        <span class="align-middle text-info">{{ comment.user.nick_name }}</span>
+                                    </a>
 
-                            </span>
-                            <span class="align-middle text-right col-6">{{ moment(comment.time_stamp).fromNow(refresh=True) }}</span>
+                                </span>
+                                <span class="align-middle text-right col-6">{{ moment(comment.time_stamp).fromNow(refresh=True) }}</span>
+                            </div>
+                            <div class="row">
+                                <p class="col-12 card-text mt-2 mb-0" style="font-size: 16px;">
+                                    {{ comment.content }}
+                                </p>
+                                <p class="col-12 text-right">
+                                    {% if current_user.id == comment.to_user_id %}
+                                    <span class="reply_comment" style="font-size:14px; cursor: pointer; color: #2c77ff;">回复</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="">
+                                {% for sub_comment in comment.sub_comments | sort(attribute='time_stamp') %}
+                                    <div class="one_sub_comment" data-to_user_id={{ sub_comment.user.id }} data-parent_id={{ comment.id }}
+                                         data-to_comment_user={{ sub_comment.user.nick_name }}>
+                                        <div class="row" style="font-size: 16px; color: #ccc;">
+                                            <span class="col-7 offset-1">
+                                                <a href="{{ url_for("main.person", user_id=sub_comment.user.id) }}"
+                                                   style="text-decoration: none">
+                                                    <img src="{{ url_for("main.get_avatar", filename=sub_comment.user.avatar_s) }}"
+                                                         class=""
+                                                         alt=""
+                                                         width="24px">
+                                                    <span class="align-middle text-info">{{ sub_comment.user.nick_name }}</span>
+                                                </a>
+
+                                            </span>
+                                            <span class="align-middle text-right col-4">{{ moment(sub_comment.time_stamp).fromNow(refresh=True) }}</span>
+                                        </div>
+                                        <div class="row">
+                                            <p class="col-11 offset-1 card-text mt-2 mb-0" style="font-size: 16px;">
+                                                回复 {{ sub_comment.to_user.nick_name }}: {{ sub_comment.content }}
+                                            </p>
+                                            <p class="col-12 text-right">
+                                                {% if current_user.id == sub_comment.to_user_id %}
+                                                <span class="reply_sub_comment" style="font-size:14px; cursor: pointer; color: #2c77ff;">回复</span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {% endfor %}
+                            </div>
+                        {% if not loop.last %}
+                            <hr>
+                        {% endif %}
                         </div>
-                        <p class="card-text mt-2" style="font-size: 18px;">
-                            {{ comment.content }}
-                        </p>
                     {% endfor %}
                 </div>
                 <div class="col-md-12">
                     {{ pager_full(pagination, fragment="#comment", share_id=share.id) }}
                 </div>
             </div>
+            </div>
         </div>
-    </div>
 
 
     <!-- 要求登录模态框 -->
@@ -115,14 +163,9 @@
             </div>
         </div>
     </div>
-
-
-
 {% endblock body %}
 {% block script %}
     {{ super() }}
-    {{ moment.include_moment(local_js=url_for("static", filename="js/moment-with-locales.js")) }}
-    {{ moment.locale(auto_detect=True) }}
     <script>
         $("#box_comment").click(function () {
             var title = "回复给 {{ share.author.nick_name }}";
@@ -133,8 +176,48 @@
 
             $("#BoxCommentModalLabel").text(title);
             $("#BoxCommentModel").modal("show");
-            $("#comment_text").focus();
+            $("#BoxCommentModel").on("shown.bs.modal", function (e) {
+                $("#comment_text").focus();
+            })
         })
+
+        // 作者回复评论
+        $(".reply_comment").click(function () {
+                var to_user_id = $(this).parents(".one_comment").attr("data-to_user_id");
+                var parent_id = $(this).parents(".one_comment").attr("data-parent_id");
+                var to_comment_user = $(this).parents(".one_comment").attr("data-to_comment_user");
+                var title = "回复给 " + to_comment_user;
+                $("input[name='user_id']").val({{ current_user.id }});
+                $("input[name='to_user_id']").val(to_user_id);
+                $("input[name='to_share_id']").val({{ share.id }});
+                $("input[name='parent_id']").val(parent_id);
+
+                $("#BoxCommentModalLabel").text(title);
+                $("#BoxCommentModel").modal("show");
+                $("#BoxCommentModel").on("shown.bs.modal", function (e) {
+                    $("#comment_text").focus();
+                })
+            }
+        )
+
+        // 评论作者回复作者的评论
+        $(".reply_sub_comment").click(function () {
+                var to_user_id = $(this).parents(".one_sub_comment").attr("data-to_user_id");
+                var parent_id = $(this).parents(".one_comment").attr("data-parent_id");
+                var to_comment_user = $(this).parents(".one_sub_comment").attr("data-to_comment_user");
+                var title = "回复给 " + to_comment_user;
+                $("input[name='user_id']").val({{ current_user.id }});
+                $("input[name='to_user_id']").val(to_user_id);
+                $("input[name='to_share_id']").val({{ share.id }});
+                $("input[name='parent_id']").val(parent_id);
+
+                $("#BoxCommentModalLabel").text(title);
+                $("#BoxCommentModel").modal("show");
+                $("#BoxCommentModel").on("shown.bs.modal", function (e) {
+                    $("#comment_text").focus();
+                })
+            }
+        )
     </script>
 {% endblock script %}
 
