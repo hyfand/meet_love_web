@@ -34,7 +34,7 @@ class BaseConfig:
 
     # 每页的数目
     SEARCH_RESULT_PER_PAGE = 20
-
+    DETAIL_SHARE_COMMENTS_PER_PAGE = 20
 
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test?charset=utf8mb4"
