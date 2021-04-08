@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+{% from "_macro.html" import pager_full %}
+{% block body %}
+    <div class="row">
+        {% for comment in comments %}
+            <div class="col-md-12 mb-3" data-id={{ comment.id }}>
+                <div class="card">
+                    <div class="card-body">
+                        <p>
+                            {{ comment.user.nick_name }} : {{ comment.content }}
+                            <a class="text-decoration-none ml-3" style="color: #1a873a" href="{{ url_for('share.share_detail', share_id=comment.to_share_id) }}#{{ comment.id }}">回复</a>
+                        </p>
+                        <p>
+                            <span style="font-size: 16px; color: #ccc;">{{ moment(comment.time_stamp).format("LLL") }}</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+    {{ pager_full(pagination) }}
+{% endblock body %}

@@ -44,9 +44,21 @@ def new_share():
 @share_bp.route("/share_detail/<int:share_id>", methods=["GET", "POST"])
 @share_bp.route("/share_detail/<int:share_id>/<int:page>", methods=["GET", "POST"])
 def share_detail(share_id, page=1):
+    comment_id = request.args.get("comment_id", type=int)  # 为了定位到评论处
     share = Share.query.get(share_id)
-    pagination = share.comments.filter_by(parent_id=-1).order_by(Comment.time_stamp.desc()).paginate(page, 20)
+    per_page = current_app.config["DETAIL_SHARE_COMMENTS_PER_PAGE"]
+    if comment_id:
+        # 算出comment 在第几页 好跳转
+        comment = Comment.query.get(comment_id)
+        no = share.comments.filter_by(parent_id=None).order_by(Comment.time_stamp.desc()).all().index(comment) + 1
+        page, more = divmod(no, per_page)
+        if more:
+            page += 1
+
+    pagination = share.comments.filter_by(parent_id=None).order_by(Comment.time_stamp.desc()).paginate(page, per_page)
     comments = pagination.items
+
+
     return render_template("share/share_detail.html", share=share, comments=comments, pagination=pagination)
 
 
@@ -59,6 +71,7 @@ def shares(user_id, page=1):
     pagination = Share.query.filter_by(author_id=user_id).order_by(Share.publish_time.desc()).paginate(page, 10)
     shares = pagination.items
     return render_template("share/shares.html", shares=shares, pagination=pagination, form=form)
+
 
 @share_bp.route("/delete_share/<int:sid>", methods=["POST"])
 @login_required
@@ -93,13 +106,13 @@ def praise_share():
     return jsonify({"status": "ok"}), 200
 
 
-
 @share_bp.route("/concern_shares")
 @share_bp.route("/concern_shares/<int:page>")
 @login_required
 def concern_shares(page=1):
     followed = db.session.query(Follow.followed_id).filter(Follow.follower_id == current_user.id).subquery()
-    pagination = Share.query.filter(and_(Share.author_id.in_(followed), Share.author_id != current_user.id)).order_by(Share.publish_time.desc()).paginate(page, 10)
+    pagination = Share.query.filter(and_(Share.author_id.in_(followed), Share.author_id != current_user.id)).order_by(
+        Share.publish_time.desc()).paginate(page, 10)
     shares = pagination.items
     return render_template("concerns.html", shares=shares, pagination=pagination)
 
@@ -112,7 +125,7 @@ def publish_comment():
     to_user_id = request.form.get("to_user_id", type=int)
     to_share_id = request.form.get("to_share_id", type=int)
     parent_id = request.form.get("parent_id", type=int)
-    if content and user_id and to_user_id and to_share_id and parent_id:
+    if content and user_id and to_user_id and to_share_id:
         comment = Comment(
             content=content,
             user_id=user_id,
@@ -124,3 +137,12 @@ def publish_comment():
         db.session.commit()
         flash("😘评论成功")
     return redirect_back()
+
+
+@share_bp.route("/receive_comments", methods=["GET"])
+@share_bp.route("/receive_comments/<int:page>", methods=["GET"])
+@login_required
+def receive_comments(page=1):
+    pagination = Comment.query.filter_by(to_user_id=current_user.id).order_by(Comment.time_stamp.desc()).paginate(page, 10)
+    comments = pagination.items
+    return render_template("share/comments.html", comments=comments, pagination=pagination)

@@ -54,13 +54,13 @@
         </div>
     </div>
     <div id="comment"></div>
-    <div class="row mt-3">
+    <div class="row mt-3" style="height: 1000px;">
         <div class="col-12">
             <div class="card">
                 <div class="card-header" style="background-color:#fff;">评论</div>
                 <div class="card-body">
                     {% for comment in comments %}
-                        <div class="one_comment" data-to_user_id={{ comment.user.id }} data-parent_id={{ comment.id }}
+                        <div class="one_comment" id={{ comment.id }} data-to_user_id={{ comment.user.id }} data-parent_id={{ comment.id }}
                              data-to_comment_user={{ comment.user.nick_name }}>
                             <div class="row" style="font-size: 16px; color: #ccc;">
                                 <span class="col-6">
@@ -88,7 +88,7 @@
                             </div>
                             <div class="">
                                 {% for sub_comment in comment.sub_comments | sort(attribute='time_stamp') %}
-                                    <div class="one_sub_comment" data-to_user_id={{ sub_comment.user.id }} data-parent_id={{ comment.id }}
+                                    <div class="one_sub_comment" id="{{ sub_comment.id }}" data-to_user_id={{ sub_comment.user.id }} data-parent_id={{ comment.id }}
                                          data-to_comment_user={{ sub_comment.user.nick_name }}>
                                         <div class="row" style="font-size: 16px; color: #ccc;">
                                             <span class="col-7 offset-1">
@@ -172,7 +172,7 @@
             $("input[name='user_id']").val({{ current_user.id }});
             $("input[name='to_user_id']").val({{ share.author_id }});
             $("input[name='to_share_id']").val({{ share.id }});
-            $("input[name='parent_id']").val(-1);
+            $("input[name='parent_id']").val();
 
             $("#BoxCommentModalLabel").text(title);
             $("#BoxCommentModel").modal("show");
@@ -218,6 +218,18 @@
                 })
             }
         )
+
+        $(function () {
+            if (window.location.hash.indexOf('#') >= 0) {
+                $('html,body').animate({
+                    scrollTop: ($(window.location.hash).offset().top - 90) + "px"
+                },
+                1000);
+            }; //主要修复评论定位不准确BUG
+        })
+
+
+
     </script>
 {% endblock script %}
 

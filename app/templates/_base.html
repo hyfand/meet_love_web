@@ -73,6 +73,9 @@
                                 <a class="dropdown-item" href="{{ url_for('user.user_following', follow_relation='followers', user_id=current_user.id, page=1) }}">
                                     我的粉丝 <span class="badge badge-primary">{{ current_user.followers.count() }}</span>
                                 </a>
+                                <a class="dropdown-item" href="{{ url_for('share.receive_comments', follow_relation='following', user_id=current_user.id, page=1) }}">
+                                    评论我的<span class="badge badge-primary">{{ current_user.unread_receive_comments_count() }}</span>
+                                </a>
                                 <a class="dropdown-item" href="{{ url_for('user.user_info') }}">个人资料</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ url_for('user.logout') }}">退出登录</a>

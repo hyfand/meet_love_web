@@ -4,8 +4,8 @@ from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
 
 share_like_table = db.Table("tbl_share_like",
-                            db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id")),
-                            db.Column("user_id", db.Integer, db.ForeignKey("tbl_user.id")))
+                            db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id"), primary_key=True),
+                            db.Column("user_id", db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True))
 
 
 class Share(db.Model):
@@ -26,7 +26,7 @@ class Share(db.Model):
         return len(self.like_users)
 
     def comments_count(self):
-        return self.comments.count()
+        return self.comments.filter_by(parent_id=None).count()
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
@@ -46,5 +46,8 @@ class Comment(db.Model):
     to_share_id = db.Column(db.Integer, db.ForeignKey("tbl_share.id"))  # 被评论的分享的id
     to_share = db.relationship("Share", foreign_keys=[to_share_id], back_populates="comments", lazy="joined")
 
-    parent_id = db.Column(db.Integer, db.ForeignKey("tbl_comment.id"))  # 父评论id 支持多级评论
+    parent_id = db.Column(db.Integer, db.ForeignKey("tbl_comment.id"), nullable=True)  # 父评论id 支持多级评论
     sub_comments = db.relationship("Comment", foreign_keys=[parent_id], cascade="all", lazy="dynamic")
+
+    read = db.Column(db.Boolean, default=False)
+

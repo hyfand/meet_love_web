@@ -48,6 +48,9 @@ class User(db.Model, UserMixin):
     comments = db.relationship("Comment", foreign_keys=[Comment.user_id], back_populates="user", lazy="dynamic", cascade="all")
     receive_comments = db.relationship("Comment", foreign_keys=[Comment.to_user_id], back_populates="to_user", lazy="dynamic", cascade="all")
 
+    def unread_receive_comments_count(self):
+        return self.receive_comments.filter_by(read=False).count()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.generate_avatar()
