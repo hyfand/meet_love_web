@@ -1,15 +1,18 @@
-from app.extensions import db
+from app.extensions import db, admin
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
 
+
 share_like_table = db.Table("tbl_share_like",
-                            db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id"), primary_key=True),
-                            db.Column("user_id", db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True))
+                            db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id")),
+                            db.Column("user_id", db.Integer, db.ForeignKey("tbl_user.id")))
 
 
 class Share(db.Model):
     __tablename__ = "tbl_share"
+
+
     id = Column(Integer, primary_key=True)
     content = Column(String(5000))
     img = Column(String(1000))
@@ -30,8 +33,6 @@ class Share(db.Model):
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
-    __table_args__ = {"extend_existing": True}
-
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200))

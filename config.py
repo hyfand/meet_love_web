@@ -36,6 +36,9 @@ class BaseConfig:
     SEARCH_RESULT_PER_PAGE = 20
     DETAIL_SHARE_COMMENTS_PER_PAGE = 20
 
+    FLASK_ADMIN_SWATCH = "cerulean"
+
+
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test?charset=utf8mb4"
     # SQLALCHEMY_ECHO = True

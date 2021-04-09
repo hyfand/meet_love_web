@@ -143,6 +143,12 @@ def publish_comment():
 @share_bp.route("/receive_comments/<int:page>", methods=["GET"])
 @login_required
 def receive_comments(page=1):
+    # 进来评论页面就将未读评论全部设置为已读
+    unread_comments = Comment.query.filter_by(to_user_id=current_user.id, read=False).all()
+    for comment in unread_comments:
+        comment.read = True
+    db.session.commit()
+
     pagination = Comment.query.filter_by(to_user_id=current_user.id).order_by(Comment.time_stamp.desc()).paginate(page, 10)
     comments = pagination.items
     return render_template("share/comments.html", comments=comments, pagination=pagination)

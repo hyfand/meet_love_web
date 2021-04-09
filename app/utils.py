@@ -29,8 +29,7 @@ def random_filename(old_filename):
 # 图片压缩
 def compress_image(fp, after=1500000, step=6, quality=90):
     """不改变图片尺寸压缩到指定大小
-    :param infile: 压缩源文件
-    :param outfile: 压缩文件保存地址
+    :param fp: 文件
     :param after: 压缩目标，KB
     :param step: 每次调整的压缩比率
     :param quality: 初始压缩比率

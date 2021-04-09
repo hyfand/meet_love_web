@@ -6,7 +6,9 @@ from flask_wtf.csrf import CSRFProtect
 from flask_avatars import Avatars
 from flask_dropzone import Dropzone
 from flask_whooshee import Whooshee
+from flask_admin import Admin
 
+from app.admin.admin_login import AdminIndexView
 
 login_manager = LoginManager()
 @login_manager.user_loader
@@ -22,3 +24,6 @@ csrf = CSRFProtect()
 avatars = Avatars()
 dropzone = Dropzone()
 whooshee = Whooshee()
+
+
+admin = Admin(name="遇爱管理后台", index_view=AdminIndexView(), template_mode="bootstrap3")
