@@ -1,8 +1,7 @@
-from app.extensions import db, admin
+from app.extensions import db
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
-
 
 share_like_table = db.Table("tbl_share_like",
                             db.Column("share_id", db.Integer, db.ForeignKey("tbl_share.id")),
@@ -11,7 +10,6 @@ share_like_table = db.Table("tbl_share_like",
 
 class Share(db.Model):
     __tablename__ = "tbl_share"
-
 
     id = Column(Integer, primary_key=True)
     content = Column(String(5000))
@@ -30,6 +28,7 @@ class Share(db.Model):
 
     def comments_count(self):
         return self.comments.filter_by(parent_id=None).count()
+
 
 class Comment(db.Model):
     __tablename__ = "tbl_comment"
@@ -51,4 +50,3 @@ class Comment(db.Model):
     sub_comments = db.relationship("Comment", foreign_keys=[parent_id], cascade="all", lazy="dynamic")
 
     read = db.Column(db.Boolean, default=False)
-

@@ -48,6 +48,8 @@ class User(db.Model, UserMixin):
     comments = db.relationship("Comment", foreign_keys=[Comment.user_id], back_populates="user", lazy="dynamic", cascade="all")
     receive_comments = db.relationship("Comment", foreign_keys=[Comment.to_user_id], back_populates="to_user", lazy="dynamic", cascade="all")
 
+    admin = db.Column(Boolean, default=False)
+
     def unread_receive_comments_count(self):
         return self.receive_comments.filter_by(read=False).count()
 
@@ -55,6 +57,12 @@ class User(db.Model, UserMixin):
         super().__init__(**kwargs)
         self.generate_avatar()
         self.follow(self)
+
+    @property
+    def is_admin(self):
+        if self.user_name == "admin" or self.admin:
+            return True
+        return False
 
     @property
     def password(self):

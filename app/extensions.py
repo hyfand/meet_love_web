@@ -8,8 +8,6 @@ from flask_dropzone import Dropzone
 from flask_whooshee import Whooshee
 from flask_admin import Admin
 
-from app.admin.admin_login import AdminIndexView
-
 login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(uid):
@@ -25,5 +23,5 @@ avatars = Avatars()
 dropzone = Dropzone()
 whooshee = Whooshee()
 
-
+from app.admin.admin_login import AdminIndexView
 admin = Admin(name="遇爱管理后台", index_view=AdminIndexView(), template_mode="bootstrap3")
