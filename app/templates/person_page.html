@@ -40,8 +40,8 @@
                                 <div class="text-left">
                                     <img src="{{ url_for("main.uploaded_files", filename=share.img) }}"
                                          class="share_img">
+                                    <span class="align-bottom big_img">[原图]</span>
                                 </div>
-                                <span class="align-bottom big_img">[原图]</span>
                                 <br>
                             {% endif %}
                             <p class="share">{{ share.content | safe }}</p>
