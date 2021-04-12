@@ -50,6 +50,9 @@ class User(db.Model, UserMixin):
 
     admin = db.Column(Boolean, default=False)
 
+    def __repr__(self):
+        return "%s %s" % (self.user_name, self.nick_name)
+
     def unread_receive_comments_count(self):
         return self.receive_comments.filter_by(read=False).count()
 
@@ -63,6 +66,11 @@ class User(db.Model, UserMixin):
         if self.user_name == "admin" or self.admin:
             return True
         return False
+
+    # 登录了并且是管理员
+    @property
+    def authenticated_and_admin(self):
+        return self.is_authenticated() and self.is_admin
 
     @property
     def password(self):

@@ -3,7 +3,7 @@ from app.commands import register_app_command
 from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
-from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone, whooshee, admin
+from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone, whooshee, admin, babel
 from flask_uploads import configure_uploads, patch_request_class
 from app.uploads_set import photos
 
@@ -35,6 +35,7 @@ def create_app(config_name=None):
     dropzone.init_app(app)
     whooshee.init_app(app)
     admin.init_app(app)
+    babel.init_app(app)
 
     configure_uploads(app, (photos, ))
     patch_request_class(app, 8 * 1024 * 1204)
@@ -57,4 +58,4 @@ def regiter_admin():
     from app.admin.admin_login import AdminModelView
     from app.models.share import Share, Comment
     admin.add_view(AdminModelView(Share, db.session, name="分享", endpoint="admin_share"))
-    admin.add_view(AdminModelView(Comment, db.session, endpoint="admin_comment"))
+    admin.add_view(AdminModelView(Comment, db.session, name="评论", endpoint="admin_comment"))

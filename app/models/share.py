@@ -23,6 +23,9 @@ class Share(db.Model):
 
     comments = db.relationship("Comment", backref="share", cascade="all", lazy="dynamic")
 
+    def __repr__(self):
+        return "%s" % self.content
+
     def like_users_count(self):
         return len(self.like_users)
 

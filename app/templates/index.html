@@ -15,6 +15,7 @@
                         {% if share.img %}
                             <div class="text-left">
                                 <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="share_img">
+                                <span class="align-bottom big_img">[原图]</span>
                             </div>
                             <br>
                         {% endif %}
@@ -49,6 +50,8 @@
 
         <!-- 要求登录模态框 -->
         {% include "modal/login_require.html" %}
+        <!-- 图片放大模态框 -->
+        {% include "modal/share_image.html" %}
 
     </div>
     {{ pager(pagination) }}

@@ -14,6 +14,7 @@
                         {% if share.img %}
                             <div class="text-left">
                                 <img src="{{ url_for("main.uploaded_files", filename=share.img) }}" class="share_img">
+                                <span class="align-bottom big_img">[原图]</span>
                             </div>
                             <br>
                         {% endif %}
@@ -49,7 +50,8 @@
         <a href="{{ url_for('main.explore') }}" class="btn btn-primary fixed-bottom shadow-lg " style="border-radius: 1.5rem; bottom: 84px; right:6%; left: auto;">换一批</a>
         <!-- 要求登录模态框 -->
         {% include "modal/login_require.html" %}
-
+        <!-- 图片放大模态框 -->
+        {% include "modal/share_image.html" %}
     </div>
 
 {% endblock body %}

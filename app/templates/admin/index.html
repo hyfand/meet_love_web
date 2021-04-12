@@ -1,29 +1,19 @@
 {% extends 'admin/master.html' %}
 
-{% block access_control %}
-    {% if current_user.is_authenticated %}
-    <div class="btn-group pull-right">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-user"></i> {{ current_user.login }} <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a href="{{ url_for('admin.logout_view') }}">Log out</a></li>
-        </ul>
-    </div>
-    {% endif %}
-{% endblock %}
-
 {% from "_macro.html" import form_field, check_field %}
 {% block body %}
-
-
-    {% if current_user.is_authenticated %}
-
-    {% else %}
-        <div class="row">
-            <div class="col-md-7">
-                <img class="img-fluid img-thumbnail" src="{{ url_for('static', filename='web_img/banner.jpg') }}" alt="">
+    <div class="row">
+        <div class="col-md-7">
+            <img class="img-fluid img-thumbnail" src="{{ url_for('static', filename='web_img/manage_banner.jpg') }}"
+                 alt="">
+        </div>
+        {% if current_user.is_authenticated and current_user.is_admin %}
+            <div class="col-md-5">
+                <h2>管理员 {{ current_user.user_name }} 你好!</h2>
             </div>
+
+
+        {% else %}
             <div class="col-md-5">
                 <form action="" method="post" role="form">
                     {{ form.csrf_token }}
@@ -33,7 +23,8 @@
                     {{ form.submit(class="btn btn-primary") }}
                 </form>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
+
 
 {% endblock body %}

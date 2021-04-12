@@ -2,21 +2,21 @@
     font-size: 30px;
 }
 
-@media (min-width: 576px) {
-    .bi{
-        font-size: 20px;
-    }
+.share_img {
+    max-width: 200px;
+    cursor: pointer;
+}
 
-
+.big_img {
+    cursor: pointer;
+    color: gray;
+    font-size: 14px;
 }
 
 * {
     touch-action: pan-y;
 }
 
-.share_img {
-    max-width: 300px;
-}
 
 .share {
     font-size: 16px;
@@ -24,4 +24,16 @@
 
 .bi-chat-right-dots-fill{
     color: #1a873a;
+}
+
+@media (min-width: 576px) {
+    .bi{
+        font-size: 20px;
+    }
+    .share_img {
+        max-width: 200px;
+        cursor: pointer;
+    }
+
+
 }

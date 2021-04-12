@@ -23,6 +23,4 @@ class AdminUserLoginForm(FlaskForm):
 
     def get_user(self):
         user = db.session.query(User).filter_by(user_name=self.admin_name.data).first()
-        if not user or not user.is_admin:
-            return None
         return user

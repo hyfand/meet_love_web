@@ -73,3 +73,10 @@ $(".comment_icon").click(function () {
     var share_id = $(this).parents(".share-data").attr("data-id");
     $(window).attr('location','/share/share_detail/' + share_id);
 })
+
+// 点击分享图片放大
+$(".big_img").on("click", function (e) {
+    var img_src = $(this).prev().attr("src");
+    $("#shareImageModal").find("img").attr("src", img_src);
+    $("#shareImageModal").modal('show');
+})
