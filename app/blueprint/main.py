@@ -56,7 +56,7 @@ def search():
     q = request.args.get("q")
     if q == "":
         flash("搜索字段不能为空")
-        redirect_back()
+        return redirect_back()
     category = request.args.get("category", "user")
     page = request.args.get("page", 1, type=int)
     per_page = current_app.config["SEARCH_RESULT_PER_PAGE"]
