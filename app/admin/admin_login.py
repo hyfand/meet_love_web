@@ -2,7 +2,6 @@ from flask_login import current_user, login_user, logout_user
 import flask_admin as admin
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose
-from flask_admin.form import SecureForm
 from flask import redirect, url_for, flash
 from app.form.admin import AdminUserLoginForm
 from flask import request
@@ -10,7 +9,6 @@ from flask import request
 
 # Create customized model view class
 class AdminBaseModelView(sqla.ModelView):
-    form_base_class = SecureForm
 
     # can_view_details = True
     create_modal = True
@@ -25,9 +23,9 @@ class AdminBaseModelView(sqla.ModelView):
 
 
 class AdminShareModelView(AdminBaseModelView):
-    column_exclude_list = ["to_share", "share"]
-    column_searchable_list = ["content"]
-    column_filters = ["id", "content"]
+    column_exclude_list = ["to_share", "share", "img"]
+    column_searchable_list = ["content", "author.nick_name"]
+    column_filters = ["id", "content", "author_id", "author.nick_name"]
     column_display_pk = True
 
 class AdminCommentModelView(AdminBaseModelView):

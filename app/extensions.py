@@ -7,7 +7,7 @@ from flask_avatars import Avatars
 from flask_dropzone import Dropzone
 from flask_whooshee import Whooshee
 from flask_admin import Admin
-from flask_babel import Babel
+from flask_babelex import Babel
 from flask_migrate import Migrate
 
 

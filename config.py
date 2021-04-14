@@ -37,7 +37,7 @@ class BaseConfig:
     DETAIL_SHARE_COMMENTS_PER_PAGE = 20
 
     FLASK_ADMIN_SWATCH = "cerulean"
-    BABEL_DEFAULT_LOCALE = "zh_CN"
+    BABEL_DEFAULT_LOCALE = "zh_Hans_CN"
 
 class DevelopConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:303498@127.0.0.1/meet_love_test?charset=utf8mb4"

@@ -7,12 +7,14 @@ from flask_login import current_user, login_required
 from app.form.share import ShareForm, ShareDeleteForm
 from app.utils import random_filename, redirect_back, compress_image
 from sqlalchemy import and_
+from app.decorators import no_banned_required
 
 share_bp = Blueprint("share", __name__, url_prefix="/share")
 
 
 @share_bp.route("/new_share", methods=["GET", "POST"])
 @login_required
+@no_banned_required
 def new_share():
     form = ShareForm()
     if form.validate_on_submit():
@@ -121,6 +123,7 @@ def concern_shares(page=1):
 
 @share_bp.route("/publish_comment", methods=["POST"])
 @login_required
+@no_banned_required
 def publish_comment():
     content = request.form.get("comment_text")
     user_id = request.form.get("user_id", type=int)

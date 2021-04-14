@@ -10,9 +10,9 @@ from app.models.share import share_like_table, Comment
 class Follow(db.Model):
     __tablename__ = "tbl_follow"
 
-    follower_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    follower_id = db.Column(Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
+    followed_id = db.Column(Integer, db.ForeignKey("tbl_user.id"), primary_key=True)
+    timestamp = db.Column(DateTime, default=datetime.utcnow)
 
     follower = db.relationship("User", foreign_keys=[follower_id], back_populates="following", lazy="joined")
     followed = db.relationship("User", foreign_keys=[followed_id], back_populates="followers", lazy="joined")
@@ -31,13 +31,14 @@ class User(db.Model, UserMixin):
     phone = Column(String(30))
     manifesto = Column(Text)  # 个人宣言
     register_time = Column(DateTime, default=datetime.utcnow)
-    confirm = Column(Boolean)
+    confirm = Column(Boolean, default=True)
+    banned = Column(Boolean, default=False)  # 封号
 
-    avatar_s = db.Column(db.String(64))
-    avatar_m = db.Column(db.String(64))
-    avatar_l = db.Column(db.String(64))
+    avatar_s = db.Column(String(64))
+    avatar_m = db.Column(String(64))
+    avatar_l = db.Column(String(64))
 
-    avatar_raw = db.Column(db.String(64))
+    avatar_raw = db.Column(String(64))
 
     like_shares = db.relationship("Share", secondary=share_like_table, back_populates="like_users")
 
