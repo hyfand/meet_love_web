@@ -11,7 +11,10 @@
                     <h5 class="card-title">{{ user.user_name }}</h5>
                     <p class="card-text">{{ user.nick_name }}</p>
                     <p class="card-text" style="font-size: 14px; color: #636363;">{{ user.manifesto }}</p>
-                    <p><span class="badge badge-primary">粉丝数 {{ user.followers.count() }}</span></p>
+                    <p>
+                        <span class="badge badge-primary">粉丝数 {{ user.followers.count() }}</span>
+                        &nbsp;&nbsp;<span class="badge badge-primary">被赞数 {{ user.receive_like_num }}</span>
+                    </p>
                     {% if current_user.is_authenticated %}
                         {% if current_user.is_following(user) %}
                             {% if current_user.is_followed_by(user) %}
@@ -101,7 +104,7 @@
                             <h5 class="card-title">{{ user.user_name }}</h5>
                             <p class="card-text">{{ user.nick_name }}</p>
                             <p class="card-text" style="font-size: 14px; color: #636363;">{{ user.manifesto }}</p>
-                            <p><span class="badge badge-primary">粉丝数 {{ user.followers.count() }}</span></p>
+                            <p><span class="badge badge-primary">粉丝数 {{ user.followers.count() }}</span>&nbsp;&nbsp;<span class="badge badge-primary">被赞数 {{ user.receive_like_num }}</span></p>
                             {% if current_user.is_authenticated %}
                                 {% if current_user.is_following(user) %}
                                     {% if current_user.is_followed_by(user) %}

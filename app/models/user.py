@@ -48,6 +48,7 @@ class User(db.Model, UserMixin):
     comments = db.relationship("Comment", foreign_keys=[Comment.user_id], back_populates="user", lazy="dynamic", cascade="all")
     receive_comments = db.relationship("Comment", foreign_keys=[Comment.to_user_id], back_populates="to_user", lazy="dynamic", cascade="all")
 
+    receive_like_num = db.Column(Integer, default=0)
     admin = db.Column(Boolean, default=False)
 
     def __repr__(self):

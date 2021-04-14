@@ -69,7 +69,7 @@ def admin_register():
         user_name="admin",
         password="123123123",
         real_name="韩玉飞",
-        nick_name="巴公战神",
+        nick_name="遇爱精选",
         id_number="110110110110",
         sex=1,
         email="303498033@qq.com",

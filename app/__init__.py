@@ -3,12 +3,12 @@ from app.commands import register_app_command
 from app.template_filter import register_template_filter
 from config import Config
 from app.extensions import login_manager
-from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone, whooshee, admin, babel
+from app.extensions import db, ckeditor, moment, csrf, avatars, dropzone, whooshee, admin, babel, migrate
 from flask_uploads import configure_uploads, patch_request_class
 from app.uploads_set import photos
 
 
-def create_app(config_name=None):
+def create_app(config_name="development"):
     app = Flask(__name__)
 
     if config_name:
@@ -36,6 +36,7 @@ def create_app(config_name=None):
     whooshee.init_app(app)
     admin.init_app(app)
     babel.init_app(app)
+    migrate.init_app(app, db)
 
     configure_uploads(app, (photos, ))
     patch_request_class(app, 8 * 1024 * 1204)
@@ -55,7 +56,9 @@ def register_blueprint(app):
 
 
 def regiter_admin():
-    from app.admin.admin_login import AdminModelView
+    from app.admin.admin_login import AdminShareModelView, AdminCommentModelView, AdminUserModelView
     from app.models.share import Share, Comment
-    admin.add_view(AdminModelView(Share, db.session, name="分享", endpoint="admin_share"))
-    admin.add_view(AdminModelView(Comment, db.session, name="评论", endpoint="admin_comment"))
+    from app.models.user import User
+    admin.add_view(AdminUserModelView(User, db.session, name="用户", endpoint="admin_users"))
+    admin.add_view(AdminShareModelView(Share, db.session, name="分享", endpoint="admin_shares"))
+    admin.add_view(AdminCommentModelView(Comment, db.session, name="评论", endpoint="admin_comments"))

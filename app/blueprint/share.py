@@ -100,8 +100,10 @@ def praise_share():
     share = Share.query.filter_by(id=share_id).first()
     if op == -1 and current_user in share.like_users:
         share.like_users.remove(current_user)
+        share.author.receive_like_num -= 1
     elif op == 1 and current_user not in share.like_users:
         share.like_users.append(current_user)
+        share.author.receive_like_num += 1
     db.session.commit()
     return jsonify({"status": "ok"}), 200
 

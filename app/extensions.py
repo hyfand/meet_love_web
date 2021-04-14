@@ -8,6 +8,7 @@ from flask_dropzone import Dropzone
 from flask_whooshee import Whooshee
 from flask_admin import Admin
 from flask_babel import Babel
+from flask_migrate import Migrate
 
 
 login_manager = LoginManager()
@@ -25,7 +26,7 @@ avatars = Avatars()
 dropzone = Dropzone()
 whooshee = Whooshee()
 babel = Babel()
-
+migrate = Migrate()
 
 from app.admin.admin_login import AdminIndexView
 admin = Admin(name="遇爱管理后台", index_view=AdminIndexView(name="首页"), template_mode="bootstrap3", base_template="admin/my_base.html")
