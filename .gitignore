@@ -135,3 +135,4 @@ dmypy.json
 potrait/*
 avatars/*
 whooshee/*
+migrations/*
